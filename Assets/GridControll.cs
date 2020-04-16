@@ -17,7 +17,11 @@ public class GridControll : MonoBehaviour
     {
         grid = new Table();
         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+        MrP.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 1);
+        MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
         MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+        MsP.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 1);
+        MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -30,6 +34,7 @@ public class GridControll : MonoBehaviour
                 grid.GetCell(MrPy, MrPx).Mr = false;
                 MrPy++;
                 grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
                 MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
                 Debug.Log("Up: " + MrPy + " - " + MrP.transform.position);
                 PrintTable();
@@ -44,6 +49,7 @@ public class GridControll : MonoBehaviour
                 grid.GetCell(MrPy, MrPx).Mr = false;
                 MrPy--;
                 grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
                 MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
                 Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                 PrintTable();
@@ -58,6 +64,7 @@ public class GridControll : MonoBehaviour
                 grid.GetCell(MrPy, MrPx).Mr = false;
                 MrPx--;
                 grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                 MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
                 Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                 PrintTable();
@@ -71,11 +78,77 @@ public class GridControll : MonoBehaviour
                 grid.GetCell(MrPy, MrPx).Mr = false;
                 MrPx++;
                 grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
                 MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
                 Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                 PrintTable();
             }
                 
+        }
+
+
+        /*
+         * Moving MS PAC MAN
+         * 
+         */
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (MsPy < 17 && !grid.GetCell(MsPy + 1, MsPx).Closed)
+            {
+                grid.GetCell(MsPy, MsPx).Ms = false;
+                MsPy++;
+                grid.GetCell(MsPy, MsPx).Ms = true;
+                MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
+                MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+                Debug.Log("Up: " + MsPy + " - " + MsP.transform.position);
+                PrintTable();
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (MsPy > 0 && !grid.GetCell(MsPy - 1, MsPx).Closed)
+            {
+                grid.GetCell(MsPy, MsPx).Ms = false;
+                MsPy--;
+                grid.GetCell(MsPy, MsPx).Ms = true;
+                MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
+                MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+                Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                PrintTable();
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (MsPx > 0 && !grid.GetCell(MsPy, MsPx - 1).Closed)
+            {
+                grid.GetCell(MsPy, MsPx).Ms = false;
+                MsPx--;
+                grid.GetCell(MsPy, MsPx).Ms = true;
+                MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+                Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                PrintTable();
+            }
+
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (MsPx < 28 && !grid.GetCell(MsPy, MsPx + 1).Closed)
+            {
+                grid.GetCell(MsPy, MsPx).Ms = false;
+                MsPx++;
+                grid.GetCell(MsPy, MsPx).Ms = true;
+                MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
+                MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+                Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                PrintTable();
+            }
+
         }
     }
 
@@ -92,7 +165,7 @@ public class GridControll : MonoBehaviour
                 }
                else if (grid.GetCell(i, j).Mr)
                 {
-                    st = st + "r  | ";
+                    st = st + "r | ";
                 }
                 else if (grid.GetCell(i, j).Ms)
                 {
