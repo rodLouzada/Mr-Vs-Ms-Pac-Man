@@ -2,20 +2,108 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class GridControll : MonoBehaviour
 {
     Table grid;
-    
+    public GameObject MrP;
+    public GameObject MsP;
+    int MrPx = 0;
+    int MrPy = 17;
+
+    int MsPx = 28;
+    int MsPy = 0;
     // Start is called before the first frame update
     void Start()
     {
         grid = new Table();
+        MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+        MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if(MrPy < 17 && !grid.GetCell( MrPy + 1, MrPx).Closed)
+            {
+                grid.GetCell(MrPy, MrPx).Mr = false;
+                MrPy++;
+                grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+                Debug.Log("Up: " + MrPy + " - " + MrP.transform.position);
+                PrintTable();
+            }
+            
+        }
 
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (MrPy > 0 && !grid.GetCell(MrPy - 1, MrPx).Closed)
+            {
+                grid.GetCell(MrPy, MrPx).Mr = false;
+                MrPy--;
+                grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+                Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                PrintTable();
+            }
+                
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (MrPx > 0 && !grid.GetCell(MrPy , MrPx - 1).Closed)
+            {
+                grid.GetCell(MrPy, MrPx).Mr = false;
+                MrPx--;
+                grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+                Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                PrintTable();
+            }
+                
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (MrPx < 28 && !grid.GetCell( MrPy, MrPx + 1).Closed)
+            {
+                grid.GetCell(MrPy, MrPx).Mr = false;
+                MrPx++;
+                grid.GetCell(MrPy, MrPx).Mr = true;
+                MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+                Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                PrintTable();
+            }
+                
+        }
+    }
+
+    public void PrintTable()
+    {
+        string st = "|";
+        for (int i = 17; i >= 0; i--)
+        {
+            for (int j = 0; j < 29; j++)
+            {
+               if( grid.GetCell(i, j).Closed)
+                {
+                    st = st + "x | ";
+                }
+               else if (grid.GetCell(i, j).Mr)
+                {
+                    st = st + "r  | ";
+                }
+                else if (grid.GetCell(i, j).Ms)
+                {
+                    st = st + "s | ";
+                }
+                else
+                    st = st + "   | ";
+            }
+            st = st + "\n|";
+        }
+        Debug.Log(st);
     }
 }
 
@@ -91,7 +179,7 @@ public class Table
     {
         for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < row; j++)
+            for (int j = 0; j < col; j++)
             {
                 if (i == 17 && j == 0) //Places Mr PacMan on (17,0)
                 {
