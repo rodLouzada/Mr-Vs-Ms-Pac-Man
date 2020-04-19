@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridControll : MonoBehaviour
+public class GridController : MonoBehaviour
 {
     Table grid;
     public GameObject MrP;
@@ -33,19 +33,19 @@ public class GridControll : MonoBehaviour
             /*int player = Random.Range(1, 3);
             int direction = Random.Range(1, 5);
         */
-            Moviment(2, 1);
+            Movement(2, 1);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Moviment(2, 2);
+            Movement(2, 2);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Moviment(2, 3);
+            Movement(2, 3);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Moviment(2, 4);
+            Movement(2, 4);
         }
     }
 
@@ -78,7 +78,7 @@ public class GridControll : MonoBehaviour
      * @Player: 1 for Mr Pac-Man and 2 for Ms Pac-Man
      * @Direction: 1 up. 2 down, 3 left, 4 right
      */
-    public void Moviment(int player, int direction)
+    public void Movement(int player, int direction)
     {
         int checker = -1;
         // Moving Mr Pac Man
