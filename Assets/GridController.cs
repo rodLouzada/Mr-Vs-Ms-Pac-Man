@@ -314,6 +314,10 @@ public class GridController : MonoBehaviour
 
     }
 
+
+   // public void Learn()
+
+
     public void PrintTable()
     {
         string st = "|";
@@ -381,7 +385,8 @@ public class Cell
     float utility;
     bool closed;
     PacMan pm;
-    int candy; // 0 no candy, 1 regular candy, 2 special candy
+    int candy;  // 0 no candy, 1 regular candy, 2 special candy
+    int[] action; // 0 stand, 1 up, 2 down, 3 left, 4 right
 
     public Cell(int row, int col, float reward, float utility, bool closed, PacMan pm, int candy)
     {
@@ -392,6 +397,7 @@ public class Cell
         Closed = closed;
         Pm = pm;
         Candy = candy;
+        action = new int[] { (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6) };
     }
 
     public Cell(int row, int col) //Overwrite contructor to create walls
@@ -411,6 +417,7 @@ public class Cell
     public bool Closed { get => closed; set => closed = value; }
     public PacMan Pm { get => pm; set => pm = value; }
     public int Candy { get => candy; set => candy = value; }
+    public float Action(int x) => action[x];
     public override string ToString()
     {
         return "( " + Row + ", " + Col + ")";
@@ -426,10 +433,21 @@ public class Table
     int row = 18;
     int col = 29;
 
+    float explor;
+    float decay;
+    float learning_rate;
+    float discount_factor;
+
     Cell[,] gd = new Cell[18, 29];
 
     public Table() //Constructor of the game maze
     {
+        //Setting learning and training variables
+        Explor = 0.2f;                             // DEFINITION OF EXPLORATION FACTOR
+        Decay = 0.9999954f;                        // DECAY 
+        Learning_rate = 1f;                        // LEARNING RATE
+        Discount_factor = 0.9f;                    // DISCOUNT FACTOR
+
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
@@ -488,9 +506,15 @@ public class Table
         }
 
     }
+
+    public float Explor { get => explor; set => explor = value; }
+    public float Decay { get => decay; set => decay = value; }
+    public float Learning_rate { get => learning_rate; set => learning_rate = value; }
+    public float Discount_factor { get => discount_factor; set => discount_factor = value; }
+
     /*
-     * Return Cell at specific position
-     */
+* Return Cell at specific position
+*/
     public Cell GetCell(int i, int j)
     {
         return gd[i, j];
