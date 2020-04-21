@@ -315,7 +315,15 @@ public class GridController : MonoBehaviour
     }
 
 
-   // public void Learn()
+   public void Learn(int agentX, int agentY, int action, int opponentAct)
+    {
+
+    }
+
+    public void ChooseAction()
+    {
+
+    }
 
 
     public void PrintTable()
@@ -385,8 +393,10 @@ public class Cell
     float utility;
     bool closed;
     PacMan pm;
-    int candy;  // 0 no candy, 1 regular candy, 2 special candy
-    int[] action; // 0 stand, 1 up, 2 down, 3 left, 4 right
+    int candy;                           // 0 no candy, 1 regular candy, 2 special candy
+    int[] action;                        // 0 stand, 1 up, 2 down, 3 left, 4 right
+    float[,] q = new float[6, 6];        // Q[s,a,o] = 6X6 matrix to each state
+
 
     public Cell(int row, int col, float reward, float utility, bool closed, PacMan pm, int candy)
     {
@@ -397,7 +407,14 @@ public class Cell
         Closed = closed;
         Pm = pm;
         Candy = candy;
-        action = new int[] { (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6) };
+        Action = new int[] { (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6) };
+        for (int a = 0; a < q.Length; a++)
+        {
+            for (int b = 0; b < q.Length; b++)
+            {
+                q[a, b] = 1;
+            }
+        }
     }
 
     public Cell(int row, int col) //Overwrite contructor to create walls
@@ -417,7 +434,9 @@ public class Cell
     public bool Closed { get => closed; set => closed = value; }
     public PacMan Pm { get => pm; set => pm = value; }
     public int Candy { get => candy; set => candy = value; }
-    public float Action(int x) => action[x];
+    public int[] Action { get => action; set => action = value; }
+
+    public float GetAction(int x) => Action[x];
     public override string ToString()
     {
         return "( " + Row + ", " + Col + ")";
@@ -437,6 +456,8 @@ public class Table
     float decay;
     float learning_rate;
     float discount_factor;
+
+    
 
     Cell[,] gd = new Cell[18, 29];
 
