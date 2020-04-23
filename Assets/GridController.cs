@@ -27,6 +27,7 @@ public class GridController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -394,9 +395,10 @@ public class Cell
     bool closed;
     PacMan pm;
     int candy;                           // 0 no candy, 1 regular candy, 2 special candy
-    int[] action;                        // 0 stand, 1 up, 2 down, 3 left, 4 right
-    float[,] q = new float[6, 6];        // Q[s,a,o] = 6X6 matrix to each state
-
+    int[] action_Mr;                        // 0 stand, 1 up, 2 down, 3 left, 4 right
+    int[] action_Ms;
+    float[,] q_Mr = new float[5, 5];        // Q[s,a,o] = 5X5 matrix to each state
+    float[,] q_Ms = new float[5, 5];
 
     public Cell(int row, int col, float reward, float utility, bool closed, PacMan pm, int candy)
     {
@@ -407,12 +409,14 @@ public class Cell
         Closed = closed;
         Pm = pm;
         Candy = candy;
-        Action = new int[] { (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6), (1 / 6) };
-        for (int a = 0; a < q.Length; a++)
+        ActionMr = new int[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
+        ActionMs = new int[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
+        for (int a = 0; a < q_Mr.Length; a++)
         {
-            for (int b = 0; b < q.Length; b++)
+            for (int b = 0; b < q_Mr.Length; b++)
             {
-                q[a, b] = 1;
+                q_Mr[a, b] = 1;
+                q_Ms[a, b] = 1;
             }
         }
     }
@@ -434,9 +438,11 @@ public class Cell
     public bool Closed { get => closed; set => closed = value; }
     public PacMan Pm { get => pm; set => pm = value; }
     public int Candy { get => candy; set => candy = value; }
-    public int[] Action { get => action; set => action = value; }
+    public int[] ActionMr { get => action_Mr; set => action_Mr = value; }
+    public int[] ActionMs { get => action_Ms; set => action_Ms = value; }
 
-    public float GetAction(int x) => Action[x];
+    public float GetActionMr(int x) => ActionMr[x];
+    public float GetActionMs(int x) => ActionMs[x];
     public override string ToString()
     {
         return "( " + Row + ", " + Col + ")";
