@@ -413,12 +413,13 @@ public class Cell
         Candy = candy;
         ActionMr = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
         ActionMs = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
-        for (int a = 0; a < q_Mr.Length; a++)
+        
+        for (int a = 0; a < q_Mr.GetLength(0); a++)
         {
-            for (int b = 0; b < q_Mr.Length; b++)
+            for (int b = 0; b < q_Mr.GetLength(1); b++)
             {
-                q_Mr[a, b] = 1;
-                q_Ms[a, b] = 1;
+                q_Mr[a, b] = 1.0f;
+                q_Ms[a, b] = 1.0f;
             }
         }
     }
