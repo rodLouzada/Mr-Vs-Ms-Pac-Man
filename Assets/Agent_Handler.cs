@@ -53,9 +53,7 @@ public class Agent_Handler : MonoBehaviour
         
     }
 
-    void init_mr_pac_man(){
-
-    }
+    
 
     void init_ms_pac_man(){
 
@@ -90,6 +88,27 @@ public class Agent_Handler : MonoBehaviour
         }else if(actionID == 4){
             gridController.Movement(2, 4);
         }
+
+    }
+
+    // algorithm itself.
+    // Variables from the environment are: the state set, S; the
+    // action set, A; the opponent’s action set, O; and the discount factor, gamma. 
+    
+    /* The variables internal to the learner are: 
+        a learning rate, alpha, which is initialized to 1.0 and decays
+        over time; 
+        the agent’s estimate of the-function, Q; 
+        the agent’s estimate of the -function, V; 
+        and the agent’s current policy for state ;, pi[s,.]. 
+        
+        The remaining variables are parameters of the algorithm: explor controls how
+        often the agent will deviate from its current policy to ensure that the state space is adequately explored, and decay
+        controls the rate at which the le
+     */
+
+    // update is Q(s,a) := r + decay * V(s')
+    int determine_best_action(){
 
     }
 
