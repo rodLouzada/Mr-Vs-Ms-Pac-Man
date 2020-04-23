@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    Table grid;
+    public Table grid;
     public GameObject MrP;
     public GameObject MsP;
-    int MrPx = 0;
-    int MrPy = 17;
+    public int MrPx = 0;
+    public int MrPy = 17;
 
-    int MsPx = 28;
-    int MsPy = 0;
+    public int MsPx = 28;
+    public int MsPy = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +50,7 @@ public class GridController : MonoBehaviour
         }
     }
 
-    /*Fucntion to check if moving to opponent cell
+    /*Function to check if moving to opponent cell
      * 
      */
     public int CheckIfBusy(int agentX, int agentY, int desiredAgentX, int desiredAgentY, int opponentx, int opponenty)
@@ -390,15 +390,17 @@ public class Cell
 {
     int row;
     int col;
-    float reward;
-    float utility;
+    public float reward;                       // R[s]
+    public float utility;                      // V[s]
     bool closed;
     PacMan pm;
     int candy;                           // 0 no candy, 1 regular candy, 2 special candy
-    int[] action_Mr;                        // 0 stand, 1 up, 2 down, 3 left, 4 right
-    int[] action_Ms;
-    float[,] q_Mr = new float[5, 5];        // Q[s,a,o] = 5X5 matrix to each state
-    float[,] q_Ms = new float[5, 5];
+    public float[] action_Mr;                        // pi: probability of each action being taken (0 stand, 1 up, 2 down, 3 left, 4 right)
+    public float[] action_Ms;
+    public float[,] q_Mr = new float[5, 5];        // Q[s,a,o] = 5X5 matrix to each state
+    public float[,] q_Ms = new float[5, 5];
+
+
 
     public Cell(int row, int col, float reward, float utility, bool closed, PacMan pm, int candy)
     {
@@ -409,8 +411,8 @@ public class Cell
         Closed = closed;
         Pm = pm;
         Candy = candy;
-        ActionMr = new int[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
-        ActionMs = new int[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
+        ActionMr = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
+        ActionMs = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
         for (int a = 0; a < q_Mr.Length; a++)
         {
             for (int b = 0; b < q_Mr.Length; b++)
@@ -438,8 +440,8 @@ public class Cell
     public bool Closed { get => closed; set => closed = value; }
     public PacMan Pm { get => pm; set => pm = value; }
     public int Candy { get => candy; set => candy = value; }
-    public int[] ActionMr { get => action_Mr; set => action_Mr = value; }
-    public int[] ActionMs { get => action_Ms; set => action_Ms = value; }
+    public float[] ActionMr { get => action_Mr; set => action_Mr = value; }
+    public float[] ActionMs { get => action_Ms; set => action_Ms = value; }
 
     public float GetActionMr(int x) => ActionMr[x];
     public float GetActionMs(int x) => ActionMs[x];
