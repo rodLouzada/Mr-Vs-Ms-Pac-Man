@@ -245,7 +245,7 @@ public class GridController : MonoBehaviour
                 {
                     checker = CheckIfBusy(MsPx, MsPy, MsPx - 1, MsPy, MrPx, MrPy);
                     if (checker == 0)
-                    {
+                    {   
                         grid.GetCell(MsPy, MsPx - 1).Pm = grid.GetCell(MsPy, MsPx).Pm;
                         grid.GetCell(MsPy, MsPx).Pm = null;
                         MsPx--;
@@ -391,7 +391,8 @@ public class Cell
     int row;
     int col;
     public float reward;                       // R[s]
-    public float utility;                      // V[s]
+    public float utility_Mr;                      // V[s]
+    public float utility_Ms;
     bool closed;
     PacMan pm;
     int candy;                           // 0 no candy, 1 regular candy, 2 special candy
@@ -407,12 +408,13 @@ public class Cell
         Row = row;
         Col = col;
         Reward = reward;
-        Utility = utility;
+        utility_Mr = utility;
+        utility_Ms = utility;
         Closed = closed;
         Pm = pm;
         Candy = candy;
-        ActionMr = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
-        ActionMs = new float[] { (1 / 5), (1 / 5), (1 / 5), (1 / 5), (1 / 5) };
+        action_Mr = new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f }; // 1/5 for each value
+        action_Ms = new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
         
         for (int a = 0; a < q_Mr.GetLength(0); a++)
         {
@@ -429,7 +431,8 @@ public class Cell
         Row = row;
         Col = col;
         Reward = 0;
-        Utility = 0;
+        utility_Mr = 0;
+        utility_Ms = 0;
         Candy = 0;
         Closed = true;
     }
@@ -437,7 +440,8 @@ public class Cell
     public int Row { get => row; set => row = value; }
     public int Col { get => col; set => col = value; }
     public float Reward { get => reward; set => reward = value; }
-    public float Utility { get => utility; set => utility = value; }
+    public float Utility_Mr { get => utility_Mr; set => utility_Mr = value; }
+    public float Utility_Ms { get => utility_Ms; set => utility_Ms = value; }
     public bool Closed { get => closed; set => closed = value; }
     public PacMan Pm { get => pm; set => pm = value; }
     public int Candy { get => candy; set => candy = value; }

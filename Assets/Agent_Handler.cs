@@ -16,7 +16,6 @@ public class Agent_Handler : MonoBehaviour
 
         // access grid controller
         gridController = GetComponent<GridController>();
-        mrPacMan = new QLearningAgent(.2f, 0.9999954f,1f, 0.9f);
         //yield return new WaitForSeconds(3); // wait for 3 seconds
         
         // begin taking actions
@@ -27,16 +26,34 @@ public class Agent_Handler : MonoBehaviour
     // The main agent loop
     IEnumerator performAgentLoop()
     {
+        yield return new WaitForSeconds(2); // wait for 1 second
+        mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
+
+        // sotre the current state and whatever state is moved into for learning
+        Cell mr_curr_state;
+        Cell mr_new_state;
+
+        Cell ms_curr_state;
+        Cell ms_new_state;
+
+        mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
+
+        ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
+
+
         while(agentsRunning){
             
-            yield return new WaitForSeconds(1); // wait for 1 second
+            yield return new WaitForSeconds(2); // wait for 1 second
 
             int mr_pac_man_action;
             int ms_pac_man_action;
 
             // get each agent's action        
-            mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPx, gridController.MrPy));
-            ms_pac_man_action = Random.Range(0,6);
+            mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPy, gridController.MrPx));
+            Debug.Log("Mr pac man will take action: " + mr_pac_man_action);
+            // mr_pac_man_action = Random.Range(0,5);
+            ms_pac_man_action = Random.Range(0,5);
+
 
             // in a random order, apply each agents action
             if(Random.Range(0,2) == 0){
@@ -47,10 +64,18 @@ public class Agent_Handler : MonoBehaviour
                 applyMrPacManAction(mr_pac_man_action);
             }
 
+            // get the new state of both players
+            mr_new_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
+            ms_new_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
+
             Debug.Log("took actions");
 
+            // LEARN
+
             //each agent should recieve some kind of reward
-            // @TODO
+            // probably use multithreading so both agents can learn in parallel
+            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action); // q learning does not use opponent's action
+
 
         }
         
@@ -64,7 +89,8 @@ public class Agent_Handler : MonoBehaviour
      * @Direction: 0 up. 1 down, 2 left, 3 right, 4 pass
      */
     void applyMrPacManAction(int actionID){
-
+        Debug.Log("Taking action:" + actionID);
+        
         if(actionID == 0){
             gridController.Movement(1, 1);
         }else if(actionID ==1){
@@ -73,6 +99,8 @@ public class Agent_Handler : MonoBehaviour
             gridController.Movement(1, 3);
         }else if(actionID == 3){
             gridController.Movement(1, 4);
+        }else if(actionID == 4){
+            gridController.Movement(2, 5);
         }
 
     }
@@ -87,6 +115,8 @@ public class Agent_Handler : MonoBehaviour
             gridController.Movement(2, 3);
         }else if(actionID == 3){
             gridController.Movement(2, 4);
+        }else if(actionID == 4){
+            gridController.Movement(2, 5);
         }
 
     }
