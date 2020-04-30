@@ -8,6 +8,7 @@ public class Agent_Handler : MonoBehaviour
     public bool agentsRunning = true; // should the agent loop run?
 
     QLearningAgent mrPacMan;
+    MinimaxQAgent msPacMan;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class Agent_Handler : MonoBehaviour
     {
         yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
+        msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f);
 
         // sotre the current state and whatever state is moved into for learning
         Cell mr_curr_state;
@@ -37,9 +39,7 @@ public class Agent_Handler : MonoBehaviour
         Cell ms_new_state;
 
         mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
-
         ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
-
 
         while(agentsRunning){
             
@@ -50,10 +50,7 @@ public class Agent_Handler : MonoBehaviour
 
             // get each agent's action        
             mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPy, gridController.MrPx));
-            Debug.Log("Mr pac man will take action: " + mr_pac_man_action);
-            // mr_pac_man_action = Random.Range(0,5);
-            ms_pac_man_action = Random.Range(0,5);
-
+            ms_pac_man_action = msPacMan.getAction(gridController.grid.GetCell(gridController.MsPy, gridController.MsPx));
 
             // in a random order, apply each agents action
             if(Random.Range(0,2) == 0){
@@ -74,8 +71,8 @@ public class Agent_Handler : MonoBehaviour
 
             //each agent should recieve some kind of reward
             // probably use multithreading so both agents can learn in parallel
-            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action); // q learning does not use opponent's action
-
+            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, ms_pac_man_action); // q learning does not use opponent's action
+            msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
 
         }
         
