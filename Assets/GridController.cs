@@ -12,6 +12,9 @@ public class GridController : MonoBehaviour
 
     public int MsPx = 28;
     public int MsPy = 0;
+
+    public GameObject sCandy;
+    public GameObject bCandy;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +30,7 @@ public class GridController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -90,7 +93,7 @@ public class GridController : MonoBehaviour
                 if (MrPy < 17 && !grid.GetCell(MrPy + 1, MrPx).Closed)
                 {
                     checker = CheckIfBusy(MrPx, MrPy, MrPx, MrPy + 1, MsPx, MsPy);
-                    if(checker == 0) 
+                    if (checker == 0)
                     {
                         grid.GetCell(MrPy + 1, MrPx).Pm = grid.GetCell(MrPy, MrPx).Pm;
                         grid.GetCell(MrPy, MrPx).Pm = null;
@@ -110,7 +113,7 @@ public class GridController : MonoBehaviour
             {
                 if (MrPy > 0 && !grid.GetCell(MrPy - 1, MrPx).Closed)
                 {
-                    checker = CheckIfBusy(MrPx, MrPy,MrPx, MrPy - 1, MsPx, MsPy);
+                    checker = CheckIfBusy(MrPx, MrPy, MrPx, MrPy - 1, MsPx, MsPy);
                     if (checker == 0)
                     {
                         grid.GetCell(MrPy - 1, MrPx).Pm = grid.GetCell(MrPy, MrPx).Pm;
@@ -130,7 +133,7 @@ public class GridController : MonoBehaviour
             {
                 if (MrPx > 0 && !grid.GetCell(MrPy, MrPx - 1).Closed)
                 {
-                    checker = CheckIfBusy(MrPx, MrPy, MrPx - 1 , MrPy, MsPx, MsPy);
+                    checker = CheckIfBusy(MrPx, MrPy, MrPx - 1, MrPy, MsPx, MsPy);
                     if (checker == 0)
                     {
                         grid.GetCell(MrPy, MrPx - 1).Pm = grid.GetCell(MrPy, MrPx).Pm;
@@ -150,7 +153,7 @@ public class GridController : MonoBehaviour
             {
                 if (MrPx < 28 && !grid.GetCell(MrPy, MrPx + 1).Closed)
                 {
-                    checker = CheckIfBusy(MrPx, MrPy, MrPx + 1, MrPy , MsPx, MsPy);
+                    checker = CheckIfBusy(MrPx, MrPy, MrPx + 1, MrPy, MsPx, MsPy);
                     if (checker == 0)
                     {
                         grid.GetCell(MrPy, MrPx + 1).Pm = grid.GetCell(MrPy, MrPx).Pm;
@@ -245,7 +248,7 @@ public class GridController : MonoBehaviour
                 {
                     checker = CheckIfBusy(MsPx, MsPy, MsPx - 1, MsPy, MrPx, MrPy);
                     if (checker == 0)
-                    {   
+                    {
                         grid.GetCell(MsPy, MsPx - 1).Pm = grid.GetCell(MsPy, MsPx).Pm;
                         grid.GetCell(MsPy, MsPx).Pm = null;
                         MsPx--;
@@ -316,7 +319,7 @@ public class GridController : MonoBehaviour
     }
 
 
-   public void Learn(int agentX, int agentY, int action, int opponentAct)
+    public void Learn(int agentX, int agentY, int action, int opponentAct)
     {
 
     }
@@ -352,6 +355,97 @@ public class GridController : MonoBehaviour
             st = st + "\n|";
         }
         Debug.Log(st);
+    }
+
+    /* This method reset candies and agents positions without erasing what have been learned already
+     */
+    public void ResetTable()
+    {
+        // Sending agetns to the right place
+
+        int OldMrPx = MrPx;
+        int OldMrPy = MrPy;
+
+        int OldMsPx = MsPx;
+        int OldMsPy = MsPy;
+
+        MrPx = 0;
+        MrPy = 17;
+
+        MsPx = 28;
+        MsPy = 0;
+
+        MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
+        MrP.gameObject.transform.localScale = new Vector3(2f, 2f, 1);
+        MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
+        MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
+        MsP.gameObject.transform.localScale = new Vector3(2f, 2f, 1);
+        MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        //Setting them candies back to place
+        PacMan MRpm = grid.GetCell(OldMrPy, OldMrPx).Pm; //making copy of the adress of the PacMan objects 
+        PacMan MSpm= grid.GetCell(OldMsPy, OldMsPx).Pm;  //making copy of the adress of the PacMan objects 
+        grid.GetCell(OldMrPy, OldMrPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
+        grid.GetCell(OldMsPy, OldMsPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
+
+        for (int i = 0; i < 18; i++)
+        {
+            for (int j = 0; j < 29; j++)
+            {
+                if (i == 17 && j == 0) //Places Mr PacMan on (17,0)
+                {
+                    MRpm.Big = false;
+                    grid.GetCell(i, j).Pm = MRpm;
+                }
+                else if (i == 0 && j == 28)//Places Ms PacMan on (0,28)
+                {
+                    MSpm.Big = false;
+                    grid.GetCell(i, j).Pm = MSpm;
+                }
+                else if ((i == 0 && j == 3) ||  //If it is any of these, than its a wall
+                    (i == 1 && (j == 1 || j == 3 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 2 && (j == 1 || j == 3 || j == 5 || j == 18 || j == 20)) ||
+                    (i == 3 && (j == 1 || j == 3 || j == 5 || j == 7 || j == 8 || j == 9 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 27)) ||
+                    (i == 4 && (j == 1 || j == 5 || j == 27)) ||
+                    (i == 5 && (j == 1 || j == 3 || j == 4 || j == 5 || j == 7 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23 || j == 25)) ||
+                    (i == 6 && (j == 1 || j == 8 || j == 10 || j == 16 || j == 21 || j == 23 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 7 && (j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 23)) ||
+                    (i == 8 && (j == 1 || j == 2 || j == 11 || j == 23 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 9 && (j == 2 || j == 4 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 20 || j == 21 || j == 27)) ||
+                    (i == 10 && (j == 1 || j == 2 || j == 4 || j == 21 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 11 && (j == 4 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23)) ||
+                    (i == 12 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 21 || j == 23 || j == 24 || j == 26 || j == 27)) ||
+                    (i == 13 && (j == 4 || j == 6 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 27)) ||
+                    (i == 14 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 8 || j == 10 || j == 24 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 15 && (j == 6 || j == 8 || j == 10 || j == 12 || j == 13 || j == 14 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 22)) ||
+                    (i == 16 && (j == 1 || j == 2 || j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 14 || j == 16 || j == 18 || j == 24 || j == 25 || j == 26 || j == 27)) ||
+                    (i == 17 && (j == 8 || j == 12 || j == 16 || j == 20 || j == 22))
+                    )
+                {
+                    // dont do anything, live your life or something. Here there is only walls 
+                }
+                else if ((i == 0 && (j == 2 || j == 15)) ||  //If it is any of these, than it has a special candy
+                    (i == 2 && (j == 21)) ||
+                    (i == 4 && (j == 2 || j == 9)) ||
+                    (i == 7 && (j == 24)) ||
+                    (i == 8 && (j == 10 || j == 17)) ||
+                    (i == 12 && (j == 9 || j == 25)) ||
+                    (i == 14 && (j == 15)) ||
+                    (i == 15 && (j == 5)) ||
+                    (i == 17 && (j == 28))
+                    )
+                {
+                    grid.GetCell(i, j).Candy = 2;
+                    Instantiate(bCandy, new Vector3(j, i, 0), Quaternion.identity);
+                }
+                else //if not just set empty cells
+                {
+                    grid.GetCell(i, j).Candy = 1;
+                    Instantiate(sCandy, new Vector3(j, i, 0), Quaternion.identity);
+                }
+
+            }
+        }
     }
 }
 
@@ -415,7 +509,7 @@ public class Cell
         Candy = candy;
         action_Mr = new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f }; // 1/5 for each value
         action_Ms = new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
-        
+
         for (int a = 0; a < q_Mr.GetLength(0); a++)
         {
             for (int b = 0; b < q_Mr.GetLength(1); b++)
@@ -470,7 +564,7 @@ public class Table
     float learning_rate;
     float discount_factor;
 
-    
+
 
     Cell[,] gd = new Cell[18, 29];
 
