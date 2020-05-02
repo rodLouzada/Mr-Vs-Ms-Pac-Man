@@ -26,7 +26,10 @@ public class Agent_Handler : MonoBehaviour
 
     // The main agent loop
     IEnumerator performAgentLoop()
-    {
+    {   
+        int curr_step = 0;
+        int max_steps = 1000;
+
         // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
         msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f);
@@ -75,6 +78,14 @@ public class Agent_Handler : MonoBehaviour
             mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, ms_pac_man_action); // q learning does not use opponent's action
             msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
 
+            if(curr_step >= max_steps){
+                //agentsRunning = false; // stop the current thread from running
+                gridController.ResetTable(); // reset the game table
+                curr_step = 0;
+                //StartCoroutine(performAgentLoop()); // start a new loop of training on the new table
+            }else{
+                curr_step++;
+            }
         }
         
     }
