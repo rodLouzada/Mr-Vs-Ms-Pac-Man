@@ -27,7 +27,7 @@ public class Agent_Handler : MonoBehaviour
     // The main agent loop
     IEnumerator performAgentLoop()
     {
-        yield return new WaitForSeconds(2); // wait for 1 second
+        // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
         msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f);
 
@@ -43,7 +43,8 @@ public class Agent_Handler : MonoBehaviour
 
         while(agentsRunning){
             
-            yield return new WaitForSeconds(2); // wait for 1 second
+            // yield return new WaitForSeconds(2); // wait for 1 second
+            yield return null;
 
             int mr_pac_man_action;
             int ms_pac_man_action;
@@ -98,6 +99,8 @@ public class Agent_Handler : MonoBehaviour
             gridController.Movement(1, 4);
         }else if(actionID == 4){
             gridController.Movement(2, 5);
+        }else{
+            Debug.Log("entered invalid action");
         }
 
     }
@@ -114,6 +117,8 @@ public class Agent_Handler : MonoBehaviour
             gridController.Movement(2, 4);
         }else if(actionID == 4){
             gridController.Movement(2, 5);
+        }else{
+            Debug.Log("entered invalid action");
         }
 
     }

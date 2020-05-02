@@ -26,7 +26,7 @@ public class QLearningAgent
 
     public int getAction(Cell state){
         //with probability explor, return an action uniformly at random
-        if(Random.Range(0.0f,100.0f) <= explor || state.ActionMr.Sum() < 1.0){
+        if(Random.Range(0.0f,1.0f) <= explor || state.ActionMr.Sum() < 1.0){
             return Random.Range(0, 5);
         }
 
@@ -46,6 +46,7 @@ public class QLearningAgent
 
         }
 
+        Debug.Log("Valid action not found");
         return -999; // should not ever make it here if values of Pi sum to 1.0
 
     }
