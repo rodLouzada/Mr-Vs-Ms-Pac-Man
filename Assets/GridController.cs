@@ -170,7 +170,7 @@ public class GridController : MonoBehaviour
             }
             else //WRONG DIRECTION NUMBER
             {
-                Debug.Log("Inserted wrong direction number\nenter 1 Up, 2 Down, 3 Left, 4 Right\n Dir number: " + direction);
+                Debug.Log("This stay in place");
             }
 
             // STEP CHECK
@@ -284,7 +284,7 @@ public class GridController : MonoBehaviour
             }
             else
             {
-                Debug.Log("Inserted wrong direction number\nenter 1 Up, 2 Down, 3 Left, 4 Right\n Dir number: " + direction);
+                Debug.Log("This stay in place");
             }
             // STEP CHECK
             if (grid.GetCell(MsPy, MsPx).Pm.StepsNumb > 0)                          // If you have steps left being big, decrease number of steps left
@@ -368,12 +368,29 @@ public class GridController : MonoBehaviour
 
         int OldMsPx = MsPx;
         int OldMsPy = MsPy;
+        int MrnewPosX;
+        int MrnewPosy;
+        int MsnewPosX;
+        int MsnewPosy;
 
-        MrPx = 0;
-        MrPy = 17;
+        do
+        {
+            MrnewPosX = (int)Random.Range(0.0f, 28.0f);//0;
+            MrnewPosy = (int)Random.Range(0.0f, 17.0f);//17;
+        } while (grid.GetCell(MrnewPosy, MrnewPosX).Closed);
 
-        MsPx = 28;
-        MsPy = 0;
+        MrPx = MrnewPosX;
+        MrPy = MrnewPosy;
+
+        do
+        {
+            MsnewPosX = (int)Random.Range(0.0f, 28.0f);
+            MsnewPosy = (int)Random.Range(0.0f, 17.0f);
+
+        } while (((MsnewPosX == MrPx) && (MsnewPosy == MrPy)) || (grid.GetCell(MsnewPosy, MsnewPosX).Closed));
+        
+        MsPx = MsnewPosX;
+        MsPy = MsnewPosy;//0;
 
         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
         MrP.gameObject.transform.localScale = new Vector3(2f, 2f, 1);
@@ -388,16 +405,19 @@ public class GridController : MonoBehaviour
         grid.GetCell(OldMrPy, OldMrPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
         grid.GetCell(OldMsPy, OldMsPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
 
+        MRpm.StepsNumb = 0;
+        MSpm.StepsNumb = 0;
+
         for (int i = 0; i < 18; i++)
         {
             for (int j = 0; j < 29; j++)
             {
-                if (i == 17 && j == 0) //Places Mr PacMan on (17,0)
+                if (i == MrnewPosy && j == MrnewPosX) //Places Mr PacMan on new cell
                 {
                     MRpm.Big = false;
                     grid.GetCell(i, j).Pm = MRpm;
                 }
-                else if (i == 0 && j == 28)//Places Ms PacMan on (0,28)
+                else if (i == MsnewPosy && j == MsnewPosX)//Places Ms PacMan on new cell
                 {
                     MSpm.Big = false;
                     grid.GetCell(i, j).Pm = MSpm;
