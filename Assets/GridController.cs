@@ -20,6 +20,10 @@ public class GridController : MonoBehaviour
     public int MsPx = 28;
     public int MsPy = 0;
 
+    public float mr_reward = 0.0f;
+
+    public float ms_reward = 0.0f;
+
     public GameObject sCandy;
     public GameObject bCandy;
 
@@ -65,6 +69,7 @@ public class GridController : MonoBehaviour
         }
     }
 
+
     /*Function to check if moving to opponent cell
      * 
      */
@@ -78,7 +83,7 @@ public class GridController : MonoBehaviour
                 return 1;
             }
             else if ((grid.GetCell(agentY, agentX).Pm.Big && !grid.GetCell(opponenty, opponentx).Pm.Big))
-            {
+            {   
                 Debug.Log("AGENT WIN");
                 this.ResetTable();
                 return 2;
@@ -109,7 +114,7 @@ public class GridController : MonoBehaviour
                 if (MrPy < 17 && !grid.GetCell(MrPy + 1, MrPx).Closed)
                 {
                     checker = CheckIfBusy(MrPx, MrPy, MrPx, MrPy + 1, MsPx, MsPy);
-                    if (checker == 0)
+                    if (checker == 0) // no problem
                     {
                         grid.GetCell(MrPy + 1, MrPx).Pm = grid.GetCell(MrPy, MrPx).Pm;
                         grid.GetCell(MrPy, MrPx).Pm = null;
@@ -748,8 +753,8 @@ public class Cell
 */
 public class Table
 {
-    int row = 18;
-    int col = 29;
+    public int row = 18;
+    public int col = 29;
 
     float explor;
     float decay;

@@ -13,7 +13,7 @@ public class Agent_Handler : MonoBehaviour
     MrPacManAgent mrPacMan;
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
-    int max_training_steps = 10; //After these steps traning will stop
+    int max_training_steps = 10000; //After these steps traning will stop
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +42,9 @@ public class Agent_Handler : MonoBehaviour
     {   
         int curr_step = 0;
         int training_curr_step = 0;
+
+        float mr_step_reward;
+        float ms_step_reward;
 
         // @TODO Rodrigo see here!!! :)
         int opponent_agent_strategy_type = 0;
@@ -75,6 +78,14 @@ public class Agent_Handler : MonoBehaviour
             mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPy, gridController.MrPx));
             ms_pac_man_action = msPacMan.getAction(gridController.grid.GetCell(gridController.MsPy, gridController.MsPx));
 
+            // calculate reward based on chosen step and current state
+            mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
+            ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
+
+            // update global score
+            gridController.mr_reward += mr_step_reward;
+            gridController.ms_reward += ms_step_reward;
+            
             // in a random order, apply each agents action
             if(Random.Range(0,2) == 0){
                 applyMrPacManAction(mr_pac_man_action);
@@ -95,8 +106,8 @@ public class Agent_Handler : MonoBehaviour
             //each agent should recieve some kind of reward
             // probably use multithreading so both agents can learn in parallel
             if(isTraining){ // only learn if in training mode, not testing mode
-                mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action, ms_pac_man_action); // q learning does not use opponent's action
-                msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
+                mrPacMan.learn(mr_curr_state, mr_new_state, mr_step_reward, mr_pac_man_action, ms_pac_man_action); // q learning does not use opponent's action
+                msPacMan.learn(ms_curr_state, ms_new_state, ms_step_reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
             }
 
             if(curr_step >= max_steps){
@@ -195,4 +206,65 @@ public class Agent_Handler : MonoBehaviour
         max_training_steps = numSteps;
     }
     */
+    
+    // 
+    float calculateStepReward(int curr_coord_y, int curr_coord_x, int action_index){
+        Cell curr_cell;
+        Cell new_cell;
+
+        curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+        
+        Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
+
+        // get direction based on action
+        if(action_index == 0){
+            if(curr_coord_y == 17){
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+            }else{
+                new_cell = gridController.grid.GetCell(curr_coord_y+1, curr_coord_x); // determine new cell coordinates
+            }
+
+        }else if(action_index == 1){
+            if(curr_coord_y == 0){
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+            }else{
+                new_cell = gridController.grid.GetCell(curr_coord_y-1, curr_coord_x);
+            }
+        }else if(action_index == 2){
+            if(curr_coord_x == 0){
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+            }else{
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x-1);
+            }
+        }else if(action_index == 3){
+            if(curr_coord_x == 28){
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+            }else{
+                new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x+1);
+            }
+        }else{
+            new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+        }
+
+
+
+        // is there a small or big orb in the new cell
+        if(new_cell.Candy == 1){ // small candy
+            return 1.0f;
+        }else if(new_cell.Candy == 2){ // big candy
+            return 5.0f;
+        }else if(new_cell.Pm != null){ // is there a player in the new cell?
+            // is the player in the current cell big or small?
+            if(new_cell.Pm.Big && curr_cell.Pm.Big == false){ // is the new cell player big and I'm small
+                return -100f;
+            }else if(new_cell.Pm.Big == false && curr_cell.Pm.Big){
+                return 100f; //eat 'em
+            }
+        }
+
+        return -0.05f;
+
+    }
+
+
 }
