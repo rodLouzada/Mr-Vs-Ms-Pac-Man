@@ -1,6 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml;
+using System.Xml.Serialization;
+using UnityEngine.UI;
+using System.IO;
+using System.Globalization;
+
 
 public class GridController : MonoBehaviour
 {
@@ -15,6 +21,10 @@ public class GridController : MonoBehaviour
 
     public GameObject sCandy;
     public GameObject bCandy;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -388,7 +398,7 @@ public class GridController : MonoBehaviour
             MsnewPosy = (int)Random.Range(0.0f, 17.0f);
 
         } while (((MsnewPosX == MrPx) && (MsnewPosy == MrPy)) || (grid.GetCell(MsnewPosy, MsnewPosX).Closed));
-        
+
         MsPx = MsnewPosX;
         MsPy = MsnewPosy;//0;
 
@@ -401,7 +411,7 @@ public class GridController : MonoBehaviour
 
         //Setting them candies back to place
         PacMan MRpm = grid.GetCell(OldMrPy, OldMrPx).Pm; //making copy of the adress of the PacMan objects 
-        PacMan MSpm= grid.GetCell(OldMsPy, OldMsPx).Pm;  //making copy of the adress of the PacMan objects 
+        PacMan MSpm = grid.GetCell(OldMsPy, OldMsPx).Pm;  //making copy of the adress of the PacMan objects 
         grid.GetCell(OldMrPy, OldMrPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
         grid.GetCell(OldMsPy, OldMsPx).Pm = null;        // Erasing PM aderess from that cell, pacMan is no longer there
 
@@ -466,6 +476,170 @@ public class GridController : MonoBehaviour
 
             }
         }
+    }
+
+    //xml variables
+    public ListsGrid xml_grid;
+
+    /*
+     * This  Method is not pretty but it works
+     * I did tried to creat a proper XML file with all the pretty nodes, but this file would get too large and crash unity
+     * To solve this I decided to reduce the number of nodes to 4 and store data as really long senquences of digits
+     * Then I will create my own parser to break this string in subsections and insert info back do the grid
+     * To correctly identify later what belongs to where I used the following special char:
+     * # Represents the end of data of a cell
+     * ; Represents a new value
+     * ! Works for a 2d array, it represents the end of a row
+     */
+    public void CreateXMLItems()
+    {
+
+        for (int i = 0; i < 18; i++)
+        {
+            for (int j = 0; j < 29; j++)
+            {
+                if (!grid.GetCell(i, j).Closed)
+                {
+
+
+                    for (int a = 0; a < 5; a++)
+                    {
+                        xml_grid.MrActionList = xml_grid.MrActionList + grid.GetCell(i, j).action_Mr[a] + ";";
+                        xml_grid.MsActionList = xml_grid.MsActionList + grid.GetCell(i, j).action_Ms[a] + ";";
+                    }
+
+                    for (int qa = 0; qa < 5; qa++)
+                    {
+                        for (int qb = 0; qb < 5; qb++)
+                        {
+                            xml_grid.MrQ = xml_grid.MrQ + grid.GetCell(i, j).Q_Mr[qa, qb] + ";";
+                            xml_grid.MsQ = xml_grid.MsQ + grid.GetCell(i, j).Q_Ms[qa, qb] + ";";
+                        }
+                        xml_grid.MrQ = xml_grid.MrQ  +"!";
+                        xml_grid.MsQ = xml_grid.MsQ + "!";
+                    }
+
+                    xml_grid.MrActionList = xml_grid.MrActionList + "#";
+                    xml_grid.MsActionList = xml_grid.MsActionList + "#";
+
+                    xml_grid.MrQ = xml_grid.MrQ + "#";
+                    xml_grid.MsQ = xml_grid.MsQ + "#";
+                }
+
+            }
+        }
+    }
+
+    /*
+     * This  Method is not pretty but work
+     * It gets the very long string I created and goes spliting on special characters and adding to the correct cells
+     * # Represents the end of data of a cell
+     * ; Represents a new value
+     * ! Works for a 2d array, it represents the end of a row
+     */
+    public void ParseXMLItems()
+    {
+       /* xml_grid.MrActionList;
+        xml_grid.MsActionList;
+        xml_grid.MrQ;
+        xml_grid.MsQ;*/
+        string mral, msal, mrql, msql, auxr,auxs;
+        int lindex;
+        System.String[] mrai, msai, mrqi, msqi;
+        for (int i = 0; i < 18; i++)
+        {
+            for (int j = 0; j < 29; j++)
+            {
+                //Execute this per each cell
+                if (!grid.GetCell(i, j).Closed)
+                {
+
+                    lindex = xml_grid.MrActionList.IndexOf("#");                       // Finds where this cell's data ends
+                    mral = xml_grid.MrActionList.Substring(0, lindex);                 // Get the data of this cell as one smaller bus still long string
+                    xml_grid.MrActionList.Remove(0, lindex + 1);                       // Remove the part we just got from original string
+                    mrai = System.Text.RegularExpressions.Regex.Split(mral, ";");      // Use split method to get array of values
+
+                    lindex = xml_grid.MsActionList.IndexOf("#");                       // Repeat exactly the same for Ms Pacman information
+                    msal = xml_grid.MsActionList.Substring(0, lindex);
+                    xml_grid.MsActionList.Remove(0, lindex + 1);
+                    msai = System.Text.RegularExpressions.Regex.Split(msal, ";");
+
+                    for (int a = 0; a < 5; a++)
+                    {
+                        grid.GetCell(i, j).action_Mr[a] = float.Parse(mrai[a]);        // Now send data back to the grid
+                        grid.GetCell(i, j).action_Ms[a] = float.Parse(msai[a]);
+                    }
+
+                    lindex = xml_grid.MrQ.IndexOf("#");                               // Similarly to actions, get all the data from this cell
+                    mrql = xml_grid.MrQ.Substring(0, lindex);
+                    xml_grid.MrQ.Remove(0, lindex + 1);
+
+                    lindex = xml_grid.MsQ.IndexOf("#");                              // And do the same for Ms. P
+                    msql = xml_grid.MsQ.Substring(0, lindex);
+                    xml_grid.MsQ.Remove(0, lindex + 1);
+
+                    for (int qa = 0; qa < 5; qa++)
+                    {
+                        lindex = mrql.IndexOf("!");                                 // Now the data we got is a 2D array, we need to do further splinting so we can feed each row of this array
+                        auxr = mrql.Substring(0, lindex);
+                        mrql.Remove(0, lindex + 1);
+                        mrqi = System.Text.RegularExpressions.Regex.Split(auxr, ";");
+
+                        lindex = msql.IndexOf("!");
+                        auxs = msql.Substring(0, lindex);
+                        msql.Remove(0, lindex + 1);
+                        msqi = System.Text.RegularExpressions.Regex.Split(auxs, ";");
+
+
+                        for (int qb = 0; qb < 5; qb++)
+                        {
+                            grid.GetCell(i, j).Q_Mr[qa, qb] = float.Parse(mrqi[qb]);
+                            grid.GetCell(i, j).Q_Ms[qa, qb] = float.Parse(msqi[qb]); ;
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    public void WriteXML()
+    {
+        CreateXMLItems();
+        XmlSerializer serializer = new XmlSerializer(typeof(ListsGrid));
+        FileStream stream = new FileStream(Application.dataPath + "/xml/test.xml", FileMode.Create);//+"+ System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".xml", FileMode.Create);
+        serializer.Serialize(stream, xml_grid);
+        stream.Close();
+    }
+    public string MrActionList = "";
+    public string MsActionList = "";
+    public string MrQ = "";
+    public string MsQ = "";
+    public void LoadXML()
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(ListsGrid));
+        FileStream stream = new FileStream(Application.dataPath + "/xml/test.xml", FileMode.Open);
+        xml_grid = serializer.Deserialize(stream) as ListsGrid;
+        MrActionList = xml_grid.MrActionList;
+        MsActionList = xml_grid.MsActionList;
+        MrQ = xml_grid.MrQ;
+        MsQ = xml_grid.MsQ;
+        Debug.Log("Started Parsing");
+        ParseXMLItems();
+        Debug.Log("Finished parsing");
+        stream.Close();
+    }
+
+
+    [System.Serializable]
+    public class ListsGrid
+    {
+        [XmlElement("cells")]
+        public string MrActionList = "";
+        public string MsActionList = "";
+        public string MrQ = "";
+        public string MsQ = "";
     }
 }
 
@@ -561,6 +735,8 @@ public class Cell
     public int Candy { get => candy; set => candy = value; }
     public float[] ActionMr { get => action_Mr; set => action_Mr = value; }
     public float[] ActionMs { get => action_Ms; set => action_Ms = value; }
+    public float[,] Q_Mr { get => q_Mr; set => q_Mr = value; }
+    public float[,] Q_Ms { get => q_Ms; set => q_Ms = value; }
 
     public float GetActionMr(int x) => ActionMr[x];
     public float GetActionMs(int x) => ActionMs[x];
