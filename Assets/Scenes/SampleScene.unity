@@ -1844,13 +1844,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentsRunning: 1
-  if_txt: {fileID: 1948042080}
-  rdm_tgl: {fileID: 525895909}
-  q_tgl: {fileID: 1506082773}
-  mm_tgl: {fileID: 1056400005}
+  training_if_txt: {fileID: 1948042080}
+  test_if_txt: {fileID: 1463892640}
+  rdm_tgl: {fileID: 52989900}
+  q_tgl: {fileID: 434949513}
+  mm_tgl: {fileID: 1030205915}
+  o_rdm_tgl: {fileID: 525895909}
+  o_q_tgl: {fileID: 1506082773}
+  o_mm_tgl: {fileID: 1056400005}
   rdm_select: 0
   q_select: 0
   mm_select: 0
+  o_rdm_select: 0
+  o_q_select: 0
+  o_mm_select: 0
 --- !u!1 &81462651
 GameObject:
   m_ObjectHideFlags: 0
@@ -14474,7 +14481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &539958869
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40963,7 +40970,7 @@ GameObject:
   - component: {fileID: 1463892641}
   - component: {fileID: 1463892640}
   m_Layer: 5
-  m_Name: InputField (TMP) (1)
+  m_Name: Test InputField (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

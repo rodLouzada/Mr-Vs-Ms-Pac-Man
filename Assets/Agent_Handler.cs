@@ -75,8 +75,19 @@ public class Agent_Handler : MonoBehaviour
             opponent_agent_strategy_type = 2;
         }
 
-        int ms_pac_man_agent_startegy_type = 2;
-
+        int ms_pac_man_agent_startegy_type = -1;
+        if (rdm_select)
+        {
+            opponent_agent_strategy_type = 0;
+        }
+        else if (q_select)
+        {
+            opponent_agent_strategy_type = 1;
+        }
+        else if (mm_select)
+        {
+            opponent_agent_strategy_type = 2;
+        }
 
         // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type, isTraining);
