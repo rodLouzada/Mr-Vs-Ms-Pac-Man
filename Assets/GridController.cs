@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using UnityEngine.UI;
 using System.IO;
 using System.Globalization;
+using TMPro;
 
 
 public class GridController : MonoBehaviour
@@ -22,7 +23,8 @@ public class GridController : MonoBehaviour
     public GameObject sCandy;
     public GameObject bCandy;
 
-
+    public TMP_InputField file_name_txt;
+    public TMP_InputField load_file_name_txt;
 
 
     // Start is called before the first frame update
@@ -602,7 +604,7 @@ public class GridController : MonoBehaviour
     {
         CreateXMLItems();
         XmlSerializer serializer = new XmlSerializer(typeof(ListsGrid));
-        FileStream stream = new FileStream(Application.dataPath + "/xml/test.xml", FileMode.Create);//+"+ System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".xml", FileMode.Create);
+        FileStream stream = new FileStream(Application.dataPath + "/xml/"+ file_name_txt.text + ".xml", FileMode.Create);//+"+ System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".xml", FileMode.Create);
         serializer.Serialize(stream, xml_grid);
         stream.Close();
     }
@@ -613,7 +615,7 @@ public class GridController : MonoBehaviour
     public void LoadXML()
     {
         XmlSerializer serializer = new XmlSerializer(typeof(ListsGrid));
-        FileStream stream = new FileStream(Application.dataPath + "/xml/test.xml", FileMode.Open);
+        FileStream stream = new FileStream(Application.dataPath + "/xml/"+ load_file_name_txt.text+ ".xml", FileMode.Open);
         xml_grid = serializer.Deserialize(stream) as ListsGrid;
         MrActionList = xml_grid.MrActionList;
         MsActionList = xml_grid.MsActionList;
