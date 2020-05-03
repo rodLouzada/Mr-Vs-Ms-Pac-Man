@@ -169,15 +169,18 @@ public class Agent_Handler : MonoBehaviour
     /*
      * Get text from input field to set the number of steps
      */
-    public void setMaxStep()
+    public void setMaxTrainingSteps()
     {
-        
-        max_steps = int.Parse(if_txt.text);
+
+        max_training_steps = int.Parse(if_txt.text);
         Debug.Log("Max steps set to: " + if_txt.text);
         start = true;
         agentsRunning = true;
+        isTraining = true;
+        max_steps = 2500;
+        agentsRunning = true;
     }
-
+    /*
     public void setToTrainingMode(){
         isTraining = true;
         max_steps = 2000;
@@ -188,5 +191,5 @@ public class Agent_Handler : MonoBehaviour
     public void setMaxTrainingSteps(int numSteps){
         max_training_steps = numSteps;
     }
-
+    */
 }
