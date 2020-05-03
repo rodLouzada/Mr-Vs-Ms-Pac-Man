@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static System.Array;
+using System.Linq;
+
 
 using static alglib; // use the linear progrmaming plugin
 
 
 // the minimax-q agent -- aka Ms. PacMan
-public class MinimaxQAgent
+public class MsPacManAgent
 {
 
     // Training parameters
@@ -15,21 +18,29 @@ public class MinimaxQAgent
     float explor = 50.0f;
     float decay;
     float gamma = 1.0f;
+    int agent_type = 2; // default is minimax-q agent
     bool isTraining; // is training or in test mode?
 
 
     // initialize minimax-q algorithm
-    public MinimaxQAgent(float explor, float decay, float learning_rate, float discount_factor, bool isTraining){
+    public MsPacManAgent(float explor, float decay, float learning_rate, float discount_factor, int agent_type, bool isTraining){
         this.alpha = learning_rate;
         this.explor = explor;
         this.decay = decay;
         this.gamma = discount_factor;
+        this.agent_type = agent_type;
         this.isTraining = isTraining;
+
+        if(this.agent_type == 0){
+            this.explor = 1.0f;
+        }
+
+
     }
 
     public int getAction(Cell state){
         //with probability explor, return an action uniformly at random
-        if(UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining){
+        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining) || explor == 1.0f){
             return UnityEngine.Random.Range(0, 5);
         }
 
@@ -53,6 +64,19 @@ public class MinimaxQAgent
     }
     
     public void learn(Cell s, Cell s_prime, float reward, int a, int o){
+        
+        // if a random agent then don't learn
+        if(this.agent_type == 0){
+            //DO NOTHING
+        }else if(this.agent_type == 1){ // q-learning
+            q_learning_learn(s, s_prime, reward, a);
+        }else if(this.agent_type == 2){ // minimax-q
+            minimax_q_learn(s, s_prime, reward, a, o);
+        }
+        
+    }
+    
+    public void minimax_q_learn(Cell s, Cell s_prime, float reward, int a, int o){
         // after recieving reward rew for moving from state s to s' via action a and opponent's action o
 
         // let Q[s,a,o] = (1 - alpha) * Q[s,a,o] + alpha * (rew + gamma * V[s'])
@@ -183,6 +207,60 @@ public class MinimaxQAgent
     
     
     }    
+
+
+
+    public void q_learning_learn(Cell s, Cell s_prime, float reward, int a){
+        // after recieving reward rew for moving from state s to s' via action a and opponent's action o
+
+        //update q table
+
+        // let Q[s,a, .] = (1 - alpha) * Q[s,a,o] + alpha * (rew + gamma * V[s'])
+        for(int o = 0; o < 5; o++){ // need to update for all possible opponent actions; q-learning does not differentiate
+            // Debug.Log("a: " + a + "  o: " + o);
+            s.q_Ms[a,o] = (1 - this.alpha) * s.q_Ms[a,o] + (alpha * (s.reward + this.gamma * s_prime.Utility_Ms));
+            // Debug.Log("Setting q mr at a: " + a + " and o: " + o + " to the value of: " + s.q_Mr[a,o]);
+        }
+
+        // calculate values for each action
+        float [] simplified_q_table = new float[5];
+
+        for(int a_prime = 0; a_prime < 5; a_prime++){
+            simplified_q_table[a_prime] = s.q_Ms[a_prime, 0]; // use 0 for opponent's action because it isn't accounted fors
+        }
+
+        
+        // find the policy that maximizes value (aka use summation_table)
+
+        // q-learning agent always chooses the best action available        
+
+        int count = 0; // count the number of actions with this maximum value
+        for(int i = 0; i < 5; i++){
+
+            if(simplified_q_table.Max() == simplified_q_table[i]){
+                count += 1;
+            }
+        }
+        
+        // for each value that does have this max value set probability of being selected to 1/count
+        for(int i = 0; i < 5; i++){
+            if(simplified_q_table.Max() == simplified_q_table[i]){
+                s.ActionMs.SetValue(1.0f/(float)count, i);
+            }else{
+                s.ActionMs.SetValue(0.0f, i);
+            }
+        }
+
+        s.Utility_Ms = simplified_q_table.Max(); // value is equal to the maximum possible value
+
+        // let alpha := alpha * decay
+        this.alpha = this.alpha * this.decay;
+
+
+
+
+
+    }
 }
 
 
