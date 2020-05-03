@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using System.IO;
 using System.Globalization;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 
 public class GridController : MonoBehaviour
 {
@@ -644,6 +644,11 @@ public class GridController : MonoBehaviour
         public string MsActionList = "";
         public string MrQ = "";
         public string MsQ = "";
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 

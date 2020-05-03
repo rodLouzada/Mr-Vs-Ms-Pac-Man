@@ -14,9 +14,13 @@ public class Agent_Handler : MonoBehaviour
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
     int max_training_steps = 10000; //After these steps traning will stop
+
+    public Toggle rdm_tgl, q_tgl,mm_tgl;
+    public bool rdm_select, q_select, mm_select;
     // Start is called before the first frame update
     void Start()
     {
+        rdm_select = rdm_tgl.enabled;
         //initalize both agents
 
         // access grid controller
@@ -30,8 +34,13 @@ public class Agent_Handler : MonoBehaviour
 
     private void Update()
     {
+        
         if (start)
         {
+            // check for strategy toggle button
+            rdm_select = rdm_tgl.isOn;
+            q_select = q_tgl.isOn;
+            mm_select = mm_tgl.isOn;
             StartCoroutine(performAgentLoop());
             start = false;
         }
@@ -46,8 +55,20 @@ public class Agent_Handler : MonoBehaviour
         float mr_step_reward;
         float ms_step_reward;
 
-        // @TODO Rodrigo see here!!! :)
-        int opponent_agent_strategy_type = 0;
+        
+        int opponent_agent_strategy_type = -1; // 0 => random; 1 => q-learning; 2 => minimax-q
+        if (rdm_select)
+        {
+            opponent_agent_strategy_type = 0;
+        }
+        else if (q_select)
+        {
+            opponent_agent_strategy_type = 1;
+        }
+        else if (mm_select)
+        {
+            opponent_agent_strategy_type = 2;
+        }
 
         // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type, isTraining);
