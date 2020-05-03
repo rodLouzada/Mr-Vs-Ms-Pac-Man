@@ -12,7 +12,7 @@ public class Agent_Handler : MonoBehaviour
     MrPacManAgent mrPacMan;
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
-    int max_trainig_steps; //After these steps traning will stop
+    int max_trainig_steps = 10; //After these steps traning will stop
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +40,7 @@ public class Agent_Handler : MonoBehaviour
     IEnumerator performAgentLoop()
     {   
         int curr_step = 0;
+        int training_curr_step = 0;
 
         // @TODO Rodrigo see here!!! :)
         int opponent_agent_strategy_type = 0;
@@ -99,6 +100,17 @@ public class Agent_Handler : MonoBehaviour
                 //StartCoroutine(performAgentLoop()); // start a new loop of training on the new table
             }else{
                 curr_step++;
+            }
+
+            if(gridController.grid.isNoCandies() == true){
+                gridController.ResetTable();
+            }
+            
+            training_curr_step += 1;
+
+            if(training_curr_step >= max_trainig_steps){
+                // exit training
+                Debug.Log("QUIT TRAINING");
             }
         }
         

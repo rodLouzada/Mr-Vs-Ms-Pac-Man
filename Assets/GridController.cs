@@ -78,13 +78,16 @@ public class GridController : MonoBehaviour
             else if ((grid.GetCell(agentY, agentX).Pm.Big && !grid.GetCell(opponenty, opponentx).Pm.Big))
             {
                 Debug.Log("AGENT WIN");
+                this.ResetTable();
                 return 2;
             }
             else
                 Debug.Log("OPPONENT WIN");
-            return 3;
+                this.ResetTable();
+                return 3;
         }
         else
+
             return 0;
     }
 
@@ -94,6 +97,7 @@ public class GridController : MonoBehaviour
      */
     public void Movement(int player, int direction)
     {
+
         int checker = -1;
         // Moving Mr Pac Man
         if (player == 1)
@@ -328,16 +332,6 @@ public class GridController : MonoBehaviour
 
     }
 
-
-    public void Learn(int agentX, int agentY, int action, int opponentAct)
-    {
-
-    }
-
-    public void ChooseAction()
-    {
-
-    }
 
 
     public void PrintTable()
@@ -842,5 +836,22 @@ public class Table
     public Cell GetCell(int i, int j)
     {
         return gd[i, j];
+    }
+
+    // are there candies remaining on the board?
+    public bool isNoCandies(){
+
+        for (int y = 0; y< this.gd.GetLength(0); y++){
+
+            for(int x = 0; x < this.gd.GetLength(1); x++){
+                if(gd[y,x].Candy > 0){
+                    return false; // there is a candy left
+                }
+            }
+
+        }
+        return true; // there are no candies left
+
+
     }
 }
