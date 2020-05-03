@@ -208,7 +208,7 @@ public class GridController : MonoBehaviour
             if (grid.GetCell(MrPy, MrPx).Candy == 2)
             {
                 MrP.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 1); //Set size to BIG
-                grid.GetCell(MrPy, MrPx).Pm.StepsNumb = 15;
+                grid.GetCell(MrPy, MrPx).Pm.StepsNumb = 100;
                 grid.GetCell(MrPy, MrPx).Pm.Big = true;
                 grid.GetCell(MrPy, MrPx).Candy = 0;
             }
@@ -321,14 +321,17 @@ public class GridController : MonoBehaviour
             if (grid.GetCell(MsPy, MsPx).Candy == 2)
             {
                 MsP.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 1);   //Set size to BIG
-                grid.GetCell(MsPy, MsPx).Pm.StepsNumb = 15;                         // Reset number of steps you can be big
+                grid.GetCell(MsPy, MsPx).Pm.StepsNumb = 100;                         // Reset number of steps you can be big
                 grid.GetCell(MsPy, MsPx).Pm.Big = true;
                 grid.GetCell(MsPy, MsPx).Candy = 0;                                 // Remove candy from cell
+
+                grid.GetCell(MsPy, MsPx).Reward = -0.05f;
             }
             //Remove candy from cell
             else if (grid.GetCell(MsPy, MsPx).Candy > 0)
             {
                 grid.GetCell(MsPy, MsPx).Candy = 0;
+                grid.GetCell(MsPy, MsPx).Reward = -0.05f;
             }
         }
         else
