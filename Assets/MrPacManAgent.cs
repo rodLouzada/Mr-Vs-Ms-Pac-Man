@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using static System.Array;
 using System.Linq;
@@ -34,15 +35,15 @@ public class MrPacManAgent
     public int getAction(Cell state){
     
         //with probability explor, return an action uniformly at random
-        if((Random.Range(0.0f,1.0f) <= explor && isTraining) || state.ActionMr.Sum() < 1.0 || explor == 1.0f){
-            return Random.Range(0, 5);
+        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining) || state.ActionMr.Sum() < 1.0 || explor == 1.0f){
+            return UnityEngine.Random.Range(0, 5);
         }
 
         //otherwise if current state is s
 
         float rolling_prob_counter = 0.0f;
 
-        float random_prob = Random.Range(0.0f, 1.0f);
+        float random_prob = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // get action based on Pi[a] for action i 
         for(int i = 0; i < 5; i++){
@@ -243,9 +244,9 @@ public class MrPacManAgent
         // output to the console for debugging
         Debug.Log("learned policy: " + alglib.ap.format(action_Mr_LP,3));
 
-        // update the Ms pac man policy and cast back to float
+        // update the Mr pac man policy and cast back to float
         for(int i = 0; i<5;i++){
-            //(float) s.action_Ms.SetValue(action_Ms_LP, i);
+            s.action_Mr.SetValue(Convert.ToSingle(action_Mr_LP.GetValue(i)), i);
         }
         
         // let V[s] min{ o', sum{a', pi[s,a'] * Q[s,a',o']} }
