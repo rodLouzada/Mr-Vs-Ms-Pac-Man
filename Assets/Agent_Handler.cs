@@ -194,18 +194,19 @@ public class Agent_Handler : MonoBehaviour
         max_steps = 2500;
         agentsRunning = true;
     }
-    /*
-    public void setToTrainingMode(){
-        isTraining = true;
-        max_steps = 2000;
+    
+    public void setToTestMode(){
+        isTraining = false;
+        max_training_steps = int.Parse(if_txt.text);
+        max_steps = int.MaxValue;
         start = true;
         agentsRunning = true;
     }
 
-    public void setMaxTrainingSteps(int numSteps){
+    /**public void setMaxTestingSteps(int numSteps){
         max_training_steps = numSteps;
-    }
-    */
+    }**/
+    
     
     // 
     float calculateStepReward(int curr_coord_y, int curr_coord_x, int action_index){
