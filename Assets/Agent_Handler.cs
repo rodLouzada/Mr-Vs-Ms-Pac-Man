@@ -6,10 +6,10 @@ using TMPro;
 public class Agent_Handler : MonoBehaviour
 {
     GridController gridController; 
-    public bool agentsRunning = false; // should the agent loop run?
+    public bool agentsRunning = true; // should the agent loop run?
     bool start = false;
     public TMP_InputField if_txt;
-    QLearningAgent mrPacMan;
+    MrPacManAgent mrPacMan;
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
     int max_trainig_steps; //After these steps traning will stop
@@ -40,10 +40,12 @@ public class Agent_Handler : MonoBehaviour
     IEnumerator performAgentLoop()
     {   
         int curr_step = 0;
-        
+
+        // @TODO Rodrigo see here!!! :)
+        int opponent_agent_strategy_type = 0;
 
         // yield return new WaitForSeconds(2); // wait for 1 second
-        mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
+        mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type);
         msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f);
 
         // sotre the current state and whatever state is moved into for learning
@@ -87,7 +89,7 @@ public class Agent_Handler : MonoBehaviour
 
             //each agent should recieve some kind of reward
             // probably use multithreading so both agents can learn in parallel
-            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, ms_pac_man_action); // q learning does not use opponent's action
+            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action, ms_pac_man_action); // q learning does not use opponent's action
             msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
 
             if(curr_step >= max_steps){
