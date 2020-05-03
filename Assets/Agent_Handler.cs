@@ -8,11 +8,12 @@ public class Agent_Handler : MonoBehaviour
     GridController gridController; 
     public bool agentsRunning = true; // should the agent loop run?
     bool start = false;
+    bool isTraining = true; // should the agents be in training mode? or just testing mode?
     public TMP_InputField if_txt;
     MrPacManAgent mrPacMan;
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
-    int max_trainig_steps = 10; //After these steps traning will stop
+    int max_training_steps = 10; //After these steps traning will stop
     // Start is called before the first frame update
     void Start()
     {
@@ -46,8 +47,8 @@ public class Agent_Handler : MonoBehaviour
         int opponent_agent_strategy_type = 0;
 
         // yield return new WaitForSeconds(2); // wait for 1 second
-        mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type);
-        msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f);
+        mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type, isTraining);
+        msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f, isTraining);
 
         // sotre the current state and whatever state is moved into for learning
         Cell mr_curr_state;
@@ -90,8 +91,10 @@ public class Agent_Handler : MonoBehaviour
 
             //each agent should recieve some kind of reward
             // probably use multithreading so both agents can learn in parallel
-            mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action, ms_pac_man_action); // q learning does not use opponent's action
-            msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
+            if(isTraining){ // only learn if in training mode, not testing mode
+                mrPacMan.learn(mr_curr_state, mr_new_state, mr_new_state.reward, mr_pac_man_action, ms_pac_man_action); // q learning does not use opponent's action
+                msPacMan.learn(ms_curr_state, ms_new_state, ms_new_state.reward, ms_pac_man_action, mr_pac_man_action); // minimax q 
+            }
 
             if(curr_step >= max_steps){
                 //agentsRunning = false; // stop the current thread from running
@@ -108,9 +111,12 @@ public class Agent_Handler : MonoBehaviour
             
             training_curr_step += 1;
 
-            if(training_curr_step >= max_trainig_steps){
+            // if game over the stop the agents from running
+            if(training_curr_step >= max_training_steps){
                 // exit training
                 Debug.Log("QUIT TRAINING");
+                agentsRunning = false;
+                gridController.ResetTable();
             }
         }
         
@@ -172,5 +178,15 @@ public class Agent_Handler : MonoBehaviour
         agentsRunning = true;
     }
 
+    public void setToTrainingMode(){
+        isTraining = true;
+        max_steps = 2000;
+        start = true;
+        agentsRunning = true;
+    }
+
+    public void setMaxTrainingSteps(int numSteps){
+        max_training_steps = numSteps;
+    }
 
 }

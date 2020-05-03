@@ -15,19 +15,21 @@ public class MinimaxQAgent
     float explor = 50.0f;
     float decay;
     float gamma = 1.0f;
+    bool isTraining; // is training or in test mode?
 
 
     // initialize minimax-q algorithm
-    public MinimaxQAgent(float explor, float decay, float learning_rate, float discount_factor){
+    public MinimaxQAgent(float explor, float decay, float learning_rate, float discount_factor, bool isTraining){
         this.alpha = learning_rate;
         this.explor = explor;
         this.decay = decay;
         this.gamma = discount_factor;
+        this.isTraining = isTraining;
     }
 
     public int getAction(Cell state){
         //with probability explor, return an action uniformly at random
-        if(UnityEngine.Random.Range(0.0f,1.0f) <= explor){
+        if(UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining){
             return UnityEngine.Random.Range(0, 5);
         }
 

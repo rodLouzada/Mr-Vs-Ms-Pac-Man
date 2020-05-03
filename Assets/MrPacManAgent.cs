@@ -15,13 +15,15 @@ public class MrPacManAgent
     float decay;
     float gamma = 1.0f;
     int agent_type;
+    bool isTraining; // is the agent training or in test mode?
 
-    public MrPacManAgent(float explor, float decay, float learning_rate, float discount_factor, int agent_type){
+    public MrPacManAgent(float explor, float decay, float learning_rate, float discount_factor, int agent_type, bool isTraining){
         this.alpha = learning_rate;
         this.explor = explor;
         this.decay = decay;
         this.gamma = discount_factor;
         this.agent_type = agent_type; // 0 => random; 1 => q-learning; 2 => minimax-q    
+        this.isTraining = isTraining;
 
         if(this.agent_type == 0){ // if a random agent then always explore
             this.explor = 1.0f;
@@ -32,7 +34,7 @@ public class MrPacManAgent
     public int getAction(Cell state){
     
         //with probability explor, return an action uniformly at random
-        if(Random.Range(0.0f,1.0f) <= explor || state.ActionMr.Sum() < 1.0){
+        if((Random.Range(0.0f,1.0f) <= explor && isTraining) || state.ActionMr.Sum() < 1.0 || explor == 1.0f){
             return Random.Range(0, 5);
         }
 
