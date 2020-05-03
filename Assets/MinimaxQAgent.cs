@@ -171,7 +171,7 @@ public class MinimaxQAgent
 
         // update the Ms pac man policy and cast back to float
         for(int i = 0; i<5;i++){
-            //(float) s.action_Ms.SetValue(action_Ms_LP, i);
+            s.action_Ms.SetValue(Convert.ToSingle(action_Ms_LP.GetValue(i)), i);
         }
         
         // let V[s] min{ o', sum{a', pi[s,a'] * Q[s,a',o']} }
