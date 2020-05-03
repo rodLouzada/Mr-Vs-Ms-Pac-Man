@@ -9,18 +9,18 @@ public class Agent_Handler : MonoBehaviour
     public bool agentsRunning = true; // should the agent loop run?
     bool start = false;
     bool isTraining = true; // should the agents be in training mode? or just testing mode?
-    public TMP_InputField if_txt;
+    public TMP_InputField training_if_txt;
+    public TMP_InputField test_if_txt;
     MrPacManAgent mrPacMan;
     MinimaxQAgent msPacMan;
     int max_steps = 2500; // Board steps
     int max_training_steps = 10000; //After these steps traning will stop
 
-    public Toggle rdm_tgl, q_tgl,mm_tgl;
-    public bool rdm_select, q_select, mm_select;
+    public Toggle rdm_tgl, q_tgl,mm_tgl, o_rdm_tgl, o_q_tgl, o_mm_tgl;
+    public bool rdm_select, q_select, mm_select, o_rdm_select, o_q_select, o_mm_select;
     // Start is called before the first frame update
     void Start()
     {
-        rdm_select = rdm_tgl.enabled;
         //initalize both agents
 
         // access grid controller
@@ -41,6 +41,11 @@ public class Agent_Handler : MonoBehaviour
             rdm_select = rdm_tgl.isOn;
             q_select = q_tgl.isOn;
             mm_select = mm_tgl.isOn;
+
+            o_rdm_select = o_rdm_tgl.isOn;
+            o_q_select = o_q_tgl.isOn;
+            o_mm_select = o_mm_tgl.isOn;
+
             StartCoroutine(performAgentLoop());
             start = false;
         }
@@ -57,15 +62,15 @@ public class Agent_Handler : MonoBehaviour
 
         
         int opponent_agent_strategy_type = -1; // 0 => random; 1 => q-learning; 2 => minimax-q
-        if (rdm_select)
+        if (o_rdm_select)
         {
             opponent_agent_strategy_type = 0;
         }
-        else if (q_select)
+        else if (o_q_select)
         {
             opponent_agent_strategy_type = 1;
         }
-        else if (mm_select)
+        else if (o_mm_select)
         {
             opponent_agent_strategy_type = 2;
         }
@@ -207,8 +212,7 @@ public class Agent_Handler : MonoBehaviour
     public void setMaxTrainingSteps()
     {
 
-        max_training_steps = int.Parse(if_txt.text);
-        Debug.Log("Max steps set to: " + if_txt.text);
+        max_training_steps = int.Parse(training_if_txt.text);
         start = true;
         agentsRunning = true;
         isTraining = true;
@@ -218,7 +222,7 @@ public class Agent_Handler : MonoBehaviour
     
     public void setToTestMode(){
         isTraining = false;
-        max_training_steps = int.Parse(if_txt.text);
+        max_training_steps = int.Parse(test_if_txt.text);
         max_steps = int.MaxValue;
         start = true;
         agentsRunning = true;
