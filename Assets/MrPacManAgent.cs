@@ -12,7 +12,7 @@ public class MrPacManAgent
 
     // Training parameters
     float alpha;
-    float explor = 50.0f;
+    float explor = 20.0f;
     float decay;
     float gamma = 1.0f;
     int agent_type;
