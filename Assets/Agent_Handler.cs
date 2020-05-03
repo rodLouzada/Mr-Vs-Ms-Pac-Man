@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 public class Agent_Handler : MonoBehaviour
 {
     GridController gridController; 
-    public bool agentsRunning = true; // should the agent loop run?
-
+    public bool agentsRunning = false; // should the agent loop run?
+    bool start = false;
+    public TMP_InputField if_txt;
     QLearningAgent mrPacMan;
     MinimaxQAgent msPacMan;
-
+    int max_steps = 2500; // Board steps
+    int max_trainig_steps; //After these steps traning will stop
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +23,24 @@ public class Agent_Handler : MonoBehaviour
         //yield return new WaitForSeconds(3); // wait for 3 seconds
         
         // begin taking actions
-        StartCoroutine(performAgentLoop());
+       // StartCoroutine(performAgentLoop());
 
     }
 
+    private void Update()
+    {
+        if (start)
+        {
+            StartCoroutine(performAgentLoop());
+            start = false;
+        }
+
+    }
     // The main agent loop
     IEnumerator performAgentLoop()
     {   
         int curr_step = 0;
-        int max_steps = 1000;
+        
 
         // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new QLearningAgent(.2f, 0.9999954f,.01f, 0.9f);
@@ -134,6 +146,17 @@ public class Agent_Handler : MonoBehaviour
 
     }
 
+    /*
+     * Get text from input field to set the number of steps
+     */
+    public void setMaxStep()
+    {
+        
+        max_steps = int.Parse(if_txt.text);
+        Debug.Log("Max steps set to: " + if_txt.text);
+        start = true;
+        agentsRunning = true;
+    }
 
 
 }
