@@ -57,13 +57,16 @@ public class Agent_Handler : MonoBehaviour
         Cell ms_curr_state;
         Cell ms_new_state;
 
-        mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
-        ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
+
 
         while(agentsRunning){
             
             // yield return new WaitForSeconds(2); // wait for 1 second
             yield return null;
+            
+            // get the current state
+            mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
+            ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
 
             int mr_pac_man_action;
             int ms_pac_man_action;
