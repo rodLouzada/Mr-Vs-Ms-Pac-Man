@@ -12,7 +12,7 @@ public class Agent_Handler : MonoBehaviour
     public TMP_InputField training_if_txt;
     public TMP_InputField test_if_txt;
     MrPacManAgent mrPacMan;
-    MinimaxQAgent msPacMan;
+    MsPacManAgent msPacMan;
     int max_steps = 2500; // Board steps
     int max_training_steps = 10000; //After these steps traning will stop
 
@@ -75,9 +75,12 @@ public class Agent_Handler : MonoBehaviour
             opponent_agent_strategy_type = 2;
         }
 
+        int ms_pac_man_agent_startegy_type = 2;
+
+
         // yield return new WaitForSeconds(2); // wait for 1 second
         mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type, isTraining);
-        msPacMan = new MinimaxQAgent(.2f, 0.9999954f,.01f, 0.9f, isTraining);
+        msPacMan = new MsPacManAgent(.2f, 0.9999954f,.01f, 0.9f, ms_pac_man_agent_startegy_type, isTraining);
 
         // sotre the current state and whatever state is moved into for learning
         Cell mr_curr_state;
