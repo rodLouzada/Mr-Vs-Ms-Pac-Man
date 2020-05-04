@@ -65,28 +65,39 @@ public class Agent_Handler : MonoBehaviour
         if (o_rdm_select)
         {
             opponent_agent_strategy_type = 0;
+            Debug.Log("opponent random");
         }
         else if (o_q_select)
         {
             opponent_agent_strategy_type = 1;
+            Debug.Log("opponent q");
+
         }
         else if (o_mm_select)
         {
             opponent_agent_strategy_type = 2;
+            Debug.Log("opponent minimax");
+
         }
 
         int ms_pac_man_agent_startegy_type = -1;
         if (rdm_select)
         {
-            opponent_agent_strategy_type = 0;
+            ms_pac_man_agent_startegy_type = 0;
+            Debug.Log("agent random");
+
         }
         else if (q_select)
         {
-            opponent_agent_strategy_type = 1;
+            ms_pac_man_agent_startegy_type = 1;
+            Debug.Log("agent qlearning");
+
         }
         else if (mm_select)
         {
-            opponent_agent_strategy_type = 2;
+            ms_pac_man_agent_startegy_type = 2;
+            Debug.Log("agent minimax");
+
         }
 
         // yield return new WaitForSeconds(2); // wait for 1 second
@@ -118,22 +129,28 @@ public class Agent_Handler : MonoBehaviour
             mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPy, gridController.MrPx));
             ms_pac_man_action = msPacMan.getAction(gridController.grid.GetCell(gridController.MsPy, gridController.MsPx));
 
-            // calculate reward based on chosen step and current state
-            mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
-            ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
-
-            // update global score
-            gridController.mr_reward += mr_step_reward;
-            gridController.ms_reward += ms_step_reward;
             
             // in a random order, apply each agents action
             if(Random.Range(0,2) == 0){
+                // calculate reward based on chosen step and current state
+                mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
                 applyMrPacManAction(mr_pac_man_action);
+                
+                // calculate the reward after the other agent has already completed their action, but before taking the action
+                ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
                 applyMsPacManAction(ms_pac_man_action);
             }else{ //otherwise ms pac man goes first
+                ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
                 applyMsPacManAction(ms_pac_man_action);
+                mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
                 applyMrPacManAction(mr_pac_man_action);
             }
+
+            // update global score
+            gridController.AddPoints(1, mr_step_reward);
+            //gridController.mr_reward += mr_step_reward;
+            gridController.AddPoints(0, ms_step_reward);
+            //gridController.ms_reward += ms_step_reward;
 
             // get the new state of both players
             mr_new_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
@@ -160,6 +177,12 @@ public class Agent_Handler : MonoBehaviour
             }
 
             if(gridController.grid.isNoCandies() == true){
+                if(gridController.curr_match_score_mr > gridController.curr_match_score_ms){ // if mr has more points this match
+                    gridController.AddWin(1); // he gets a win
+                }else if(gridController.curr_match_score_ms > gridController.curr_match_score_mr){ // if ms has more points this match
+                    gridController.AddWin(0);
+                    //gridController.games_won_ms += 1; // she gets a win
+                }
                 gridController.ResetTable();
             }
             

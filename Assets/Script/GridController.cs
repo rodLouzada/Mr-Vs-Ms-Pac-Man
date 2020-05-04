@@ -33,6 +33,19 @@ public class GridController : MonoBehaviour
     public TMP_InputField file_name_txt;
     public TMP_InputField load_file_name_txt;
 
+    // display the number of points
+    public Text txtMrScore;
+    public Text txtMsScore;
+    public Text txtMrGamesWon;
+    public Text txtMsGamesWon;
+
+    public float current_score_mr = 0.0f;
+    public float current_score_ms = 0.0f;
+
+    public float curr_match_score_mr = 0.0f;
+    public float curr_match_score_ms = 0.0f;
+    public int games_won_mr = 0;
+    public int games_won_ms = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -107,11 +120,14 @@ public class GridController : MonoBehaviour
             else if ((grid.GetCell(agentY, agentX).Pm.Big && !grid.GetCell(opponenty, opponentx).Pm.Big))
             {   
                 Debug.Log("AGENT WIN");
+                this.AddWin(0); // ms pac man wins
+                
                 this.ResetTable();
                 return 2;
             }
             else
                 Debug.Log("OPPONENT WIN");
+                this.AddWin(1); // mr pac man wins
                 this.ResetTable();
                 return 3;
         }
@@ -396,7 +412,12 @@ public class GridController : MonoBehaviour
     /* This method reset candies and agents positions without erasing what have been learned already
      */
     public void ResetTable()
-    {
+    {   
+
+        // reset current match scores
+        this.curr_match_score_mr = 0.0f;
+        this.curr_match_score_ms = 0.0f;
+
         if (table == 0)
         {
             // Sending agetns to the right place
@@ -821,6 +842,33 @@ public class GridController : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void AddWin(int playerID){
+        if(playerID == 0){
+            this.games_won_ms += 1;
+            txtMsGamesWon.text = this.games_won_ms.ToString();
+        }else if(playerID == 1){
+            this.games_won_mr += 1;
+            txtMrGamesWon.text = this.games_won_mr.ToString();
+        }
+
+    }
+
+    public void AddPoints(int playerID, float points){
+        if(playerID == 0){
+            this.curr_match_score_ms += points;
+            this.current_score_ms += points;
+            this.txtMsScore.text = this.current_score_ms.ToString();
+            // txtMsScore.GetComponent<Text> = this.curr_match_score_ms;
+        }else if(playerID == 1){
+            this.curr_match_score_mr += points;
+            this.current_score_mr += points;
+            this.txtMrScore.text = this.current_score_mr.ToString();
+
+            // txtMrScore = this.current_score_mr;
+        }
+    }
+
 }
 
 

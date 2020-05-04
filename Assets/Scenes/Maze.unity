@@ -1810,6 +1810,16 @@ MonoBehaviour:
   bCandy: {fileID: 508131547263454054, guid: 62d8131a97adc7d44ac77edfaf989a7d, type: 3}
   file_name_txt: {fileID: 635666151}
   load_file_name_txt: {fileID: 1011441270}
+  txtMrScore: {fileID: 349064928}
+  txtMsScore: {fileID: 822611250}
+  txtMrGamesWon: {fileID: 81624880}
+  txtMsGamesWon: {fileID: 1375073440}
+  current_score_mr: 0
+  current_score_ms: 0
+  curr_match_score_mr: 0
+  curr_match_score_ms: 0
+  games_won_mr: 0
+  games_won_ms: 0
   xml_grid:
     MrActionList: 
     MsActionList: 
