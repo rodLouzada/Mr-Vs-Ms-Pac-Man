@@ -37,6 +37,8 @@ public class Agent_Handler : MonoBehaviour
         
         if (start)
         {
+            gridController.ClearLogs();
+
             // check for strategy toggle button
             rdm_select = rdm_tgl.isOn;
             q_select = q_tgl.isOn;
