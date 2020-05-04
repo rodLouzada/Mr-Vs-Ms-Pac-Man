@@ -13,7 +13,7 @@ public class Agent_Handler : MonoBehaviour
     public TMP_InputField test_if_txt;
     MrPacManAgent mrPacMan;
     MsPacManAgent msPacMan;
-    int max_steps = 2500; // Board steps
+    public int max_steps = 2500; // Board steps
     int max_training_steps = 10000; //After these steps traning will stop
 
     public Toggle rdm_tgl, q_tgl,mm_tgl, o_rdm_tgl, o_q_tgl, o_mm_tgl;
@@ -230,7 +230,7 @@ public class Agent_Handler : MonoBehaviour
         start = true;
         agentsRunning = true;
         isTraining = true;
-        max_steps = 2500;
+        //max_steps = 2500;
         agentsRunning = true;
     }
     
