@@ -258,7 +258,7 @@ public class Agent_Handler : MonoBehaviour
 
         // get direction based on action
         if(action_index == 0){
-            if(curr_coord_y == 17){
+            if(curr_coord_y == gridController.grid.row-1){
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
             }else{
                 new_cell = gridController.grid.GetCell(curr_coord_y+1, curr_coord_x); // determine new cell coordinates
@@ -277,7 +277,7 @@ public class Agent_Handler : MonoBehaviour
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x-1);
             }
         }else if(action_index == 3){
-            if(curr_coord_x == 28){
+            if(curr_coord_x == gridController.grid.col -1){
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
             }else{
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x+1);
