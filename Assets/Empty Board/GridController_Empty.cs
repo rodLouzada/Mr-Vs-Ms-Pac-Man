@@ -9,7 +9,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class GridController : MonoBehaviour
+public class GridController_Empty : MonoBehaviour
 {
     public Table grid;
     public GameObject MrP;
@@ -35,6 +35,7 @@ public class GridController : MonoBehaviour
     void Start()
     {
         grid = new Table();
+        ResetTable();
         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
         MrP.gameObject.transform.localScale = new Vector3(2f, 2f, 1);
         MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
@@ -387,24 +388,11 @@ public class GridController : MonoBehaviour
         int MsnewPosX;
         int MsnewPosy;
 
-        do
-        {
-            MrnewPosX = (int)Random.Range(0.0f, 28.0f);//0;
-            MrnewPosy = (int)Random.Range(0.0f, 17.0f);//17;
-        } while (grid.GetCell(MrnewPosy, MrnewPosX).Closed);
+        MrPx = 0;
+        MrPy = 17;
 
-        MrPx = MrnewPosX;
-        MrPy = MrnewPosy;
-
-        do
-        {
-            MsnewPosX = (int)Random.Range(0.0f, 28.0f);
-            MsnewPosy = (int)Random.Range(0.0f, 17.0f);
-
-        } while (((MsnewPosX == MrPx) && (MsnewPosy == MrPy)) || (grid.GetCell(MsnewPosy, MsnewPosX).Closed));
-
-        MsPx = MsnewPosX;
-        MsPy = MsnewPosy;//0;
+        MsPx = 28;
+        MsPy = 0;//0;
 
         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
         MrP.gameObject.transform.localScale = new Vector3(2f, 2f, 1);
@@ -426,47 +414,22 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < 29; j++)
             {
-                if (i == MrnewPosy && j == MrnewPosX) //Places Mr PacMan on new cell
+                if (i == 17 && j == 0) //Places Mr PacMan on new cell
                 {
                     MRpm.Big = false;
                     grid.GetCell(i, j).Pm = MRpm;
                 }
-                else if (i == MsnewPosy && j == MsnewPosX)//Places Ms PacMan on new cell
+                else if (i == 0 && j == 28)//Places Ms PacMan on new cell
                 {
                     MSpm.Big = false;
                     grid.GetCell(i, j).Pm = MSpm;
                 }
-                else if ((i == 0 && j == 3) ||  //If it is any of these, than its a wall
-                    (i == 1 && (j == 1 || j == 3 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 2 && (j == 1 || j == 3 || j == 5 || j == 18 || j == 20)) ||
-                    (i == 3 && (j == 1 || j == 3 || j == 5 || j == 7 || j == 8 || j == 9 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 27)) ||
-                    (i == 4 && (j == 1 || j == 5 || j == 27)) ||
-                    (i == 5 && (j == 1 || j == 3 || j == 4 || j == 5 || j == 7 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23 || j == 25)) ||
-                    (i == 6 && (j == 1 || j == 8 || j == 10 || j == 16 || j == 21 || j == 23 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 7 && (j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 23)) ||
-                    (i == 8 && (j == 1 || j == 2 || j == 11 || j == 23 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 9 && (j == 2 || j == 4 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 20 || j == 21 || j == 27)) ||
-                    (i == 10 && (j == 1 || j == 2 || j == 4 || j == 21 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 11 && (j == 4 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23)) ||
-                    (i == 12 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 21 || j == 23 || j == 24 || j == 26 || j == 27)) ||
-                    (i == 13 && (j == 4 || j == 6 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 27)) ||
-                    (i == 14 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 8 || j == 10 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 15 && (j == 6 || j == 8 || j == 10 || j == 12 || j == 13 || j == 14 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 22)) ||
-                    (i == 16 && (j == 1 || j == 2 || j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 14 || j == 16 || j == 18 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 17 && (j == 8 || j == 12 || j == 16 || j == 20 || j == 22))
-                    )
-                {
-                    // dont do anything, live your life or something. Here there is only walls 
-                }
-                else if ((i == 0 && (j == 2 || j == 15)) ||  //If it is any of these, than it has a special candy
-                    (i == 2 && (j == 21)) ||
-                    (i == 4 && (j == 2 || j == 9)) ||
-                    (i == 7 && (j == 24)) ||
-                    (i == 8 && (j == 10 || j == 17)) ||
-                    (i == 12 && (j == 9 || j == 25)) ||
-                    (i == 14 && (j == 15)) ||
-                    (i == 15 && (j == 5)) ||
-                    (i == 17 && (j == 28))
+                else if ((i == 1 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||  //If it is any of these, than it has a special candy
+                    (i == 16 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 4 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 13 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 7 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 10 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15))
                     )
                 {
                     grid.GetCell(i, j).Candy = 2;
@@ -653,7 +616,7 @@ public class GridController : MonoBehaviour
 }
 
 
-public class PacMan
+/*public class PacMan
 {
     bool big;
     int stepsBig;
@@ -682,7 +645,7 @@ public class PacMan
  * @closed: in this example there are cells of the grid that are closed, behaves like walls
  * @mr: is mr pac man in this cell?
  * @ms: is ms pac man in this cell?
- */
+ *
 public class Cell
 {
     int row;
@@ -755,11 +718,11 @@ public class Cell
     }
 }
 
-
+*/
 /*
  * This class create the object grid table in which the UAV exists
-*/
-public class Table
+
+public class Table_E
 {
     public int row = 18;
     public int col = 29;
@@ -773,7 +736,7 @@ public class Table
 
     Cell[,] gd = new Cell[18, 29];
 
-    public Table() //Constructor of the game maze
+    public Table_E() //Constructor of the game maze
     {
         //Setting learning and training variables
         Explor = 0.2f;                             // DEFINITION OF EXPLORATION FACTOR
@@ -795,37 +758,12 @@ public class Table
                     PacMan ms = new PacMan(false, 0, false);
                     gd[i, j] = new Cell(i, j, 0, 0.5f, false, ms, 1);
                 }
-                else if ((i == 0 && j == 3) ||  //If it is any of these, than its a wall
-                    (i == 1 && (j == 1 || j == 3 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 2 && (j == 1 || j == 3 || j == 5 || j == 18 || j == 20)) ||
-                    (i == 3 && (j == 1 || j == 3 || j == 5 || j == 7 || j == 8 || j == 9 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 20 || j == 21 || j == 22 || j == 23 || j == 24 || j == 25 || j == 27)) ||
-                    (i == 4 && (j == 1 || j == 5 || j == 27)) ||
-                    (i == 5 && (j == 1 || j == 3 || j == 4 || j == 5 || j == 7 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23 || j == 25)) ||
-                    (i == 6 && (j == 1 || j == 8 || j == 10 || j == 16 || j == 21 || j == 23 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 7 && (j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 23)) ||
-                    (i == 8 && (j == 1 || j == 2 || j == 11 || j == 23 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 9 && (j == 2 || j == 4 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 20 || j == 21 || j == 27)) ||
-                    (i == 10 && (j == 1 || j == 2 || j == 4 || j == 21 || j == 23 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 11 && (j == 4 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 12 || j == 13 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 23)) ||
-                    (i == 12 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 21 || j == 23 || j == 24 || j == 26 || j == 27)) ||
-                    (i == 13 && (j == 4 || j == 6 || j == 8 || j == 10 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 17 || j == 18 || j == 19 || j == 21 || j == 27)) ||
-                    (i == 14 && (j == 1 || j == 2 || j == 4 || j == 6 || j == 8 || j == 10 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 15 && (j == 6 || j == 8 || j == 10 || j == 12 || j == 13 || j == 14 || j == 16 || j == 18 || j == 19 || j == 20 || j == 21 || j == 22)) ||
-                    (i == 16 && (j == 1 || j == 2 || j == 3 || j == 4 || j == 5 || j == 6 || j == 8 || j == 10 || j == 14 || j == 16 || j == 18 || j == 24 || j == 25 || j == 26 || j == 27)) ||
-                    (i == 17 && (j == 8 || j == 12 || j == 16 || j == 20 || j == 22))
-                    )
-                {
-                    gd[i, j] = new Cell(i, j);
-                }
-                else if ((i == 0 && (j == 2 || j == 15)) ||  //If it is any of these, than it has a special candy
-                    (i == 2 && (j == 21)) ||
-                    (i == 4 && (j == 2 || j == 9)) ||
-                    (i == 7 && (j == 24)) ||
-                    (i == 8 && (j == 10 || j == 17)) ||
-                    (i == 12 && (j == 9 || j == 25)) ||
-                    (i == 14 && (j == 15)) ||
-                    (i == 15 && (j == 5)) ||
-                    (i == 17 && (j == 28))
+                else if ((i == 1 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||  //If it is any of these, than it has a special candy
+                    (i == 16 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 4 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 13 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 7 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15)) ||
+                    (i == 10 && (j == 1 || j == 27 || j == 4 || j == 24 || j == 7 || j == 21 || j == 10 || j == 18 || j == 13 || j == 15))
                     )
                 {
                     gd[i, j] = new Cell(i, j, 0, 0.5f, false, null, 2);
@@ -847,7 +785,7 @@ public class Table
 
     /*
 * Return Cell at specific position
-*/
+
     public Cell GetCell(int i, int j)
     {
         return gd[i, j];
@@ -869,4 +807,4 @@ public class Table
 
 
     }
-}
+}*/
