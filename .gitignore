@@ -64,3 +64,6 @@ crashlytics-build.properties
 
 # VSCode generated files
 .vscode/
+*.meta
+
+Mr&Ms Pac Man_Data/*
