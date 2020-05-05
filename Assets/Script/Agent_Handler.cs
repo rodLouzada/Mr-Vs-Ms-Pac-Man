@@ -260,19 +260,18 @@ public class Agent_Handler : MonoBehaviour
     {
 
         max_training_steps = int.Parse(training_if_txt.text);
-        start = true;
         agentsRunning = true;
         isTraining = true;
         //max_steps = 2500;
-        agentsRunning = true;
+        start = true;
     }
     
     public void setToTestMode(){
         isTraining = false;
         max_training_steps = int.Parse(test_if_txt.text);
         max_steps = int.MaxValue;
-        start = true;
         agentsRunning = true;
+        start = true;
     }
 
     /**public void setMaxTestingSteps(int numSteps){
