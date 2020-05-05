@@ -20,6 +20,9 @@ public class Agent_Handler : MonoBehaviour
 
     public Toggle rdm_tgl, q_tgl,mm_tgl, o_rdm_tgl, o_q_tgl, o_mm_tgl;
     public bool rdm_select, q_select, mm_select, o_rdm_select, o_q_select, o_mm_select;
+
+    public int curr_step = 0;
+    public int training_curr_step = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,9 +44,12 @@ public class Agent_Handler : MonoBehaviour
         {
 
 
-            gridController.grid.Decay = Mathf.Pow(10, Mathf.Log10(0.01f / max_training_steps));
+            gridController.grid.Decay = Mathf.Pow(10, (Mathf.Log10(0.01f ) / max_training_steps));
 
             gridController.ClearLogs();
+
+            curr_step = 0;
+            training_curr_step = 0;
 
 
             // check for strategy toggle button
@@ -64,8 +70,7 @@ public class Agent_Handler : MonoBehaviour
     // The main agent loop
     IEnumerator performAgentLoop()
     {   
-        int curr_step = 0;
-        int training_curr_step = 0;
+        
 
         float mr_step_reward;
         float ms_step_reward;
@@ -161,6 +166,7 @@ public class Agent_Handler : MonoBehaviour
             //gridController.mr_reward += mr_step_reward;
             gridController.AddPoints(0, ms_step_reward);
             //gridController.ms_reward += ms_step_reward;
+            training_curr_step += 1;
 
             // get the new state of both players
             mr_new_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
@@ -195,8 +201,6 @@ public class Agent_Handler : MonoBehaviour
                 }
                 gridController.ResetTable();
             }
-            
-            training_curr_step += 1;
 
             // if game over the stop the agents from running
             if(training_curr_step >= max_training_steps){

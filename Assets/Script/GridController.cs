@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class GridController : MonoBehaviour
 {
+    public Agent_Handler ag;
     public int table; //table set 0 for maze, 1 empty no maze, 2 small board
 
     public Table grid;
@@ -884,17 +885,14 @@ public class GridController : MonoBehaviour
             this.current_score_ms += points;
             this.txtMsScore.text = this.current_score_ms.ToString();
             // txtMsScore.GetComponent<Text> = this.curr_match_score_ms;
-            steps_played_MS += 1;
-            txtStep_MS.text = steps_played_MS.ToString();
+            txtStep_MS.text = ag.training_curr_step.ToString();
 
         }
         else if(playerID == 1){
             this.curr_match_score_mr += points;
             this.current_score_mr += points;
             this.txtMrScore.text = this.current_score_mr.ToString();
-
-            steps_played_MR += 1;
-            txtStep_MR.text = steps_played_MR.ToString();
+            txtStep_MR.text = ag.training_curr_step.ToString();
 
             // txtMrScore = this.current_score_mr;
         }
