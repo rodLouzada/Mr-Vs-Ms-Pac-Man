@@ -67,3 +67,5 @@ crashlytics-build.properties
 *.meta
 
 Mr&Ms Pac Man_Data/*
+Mr&Ms Pac Man_Data/level1
+Mr&Ms Pac Man_Data/app.info
