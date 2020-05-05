@@ -31,6 +31,9 @@ public class Agent_Handler : MonoBehaviour
     Cell ms_curr_state;
     Cell ms_new_state;
 
+    int action_return_mr;
+    int action_return_ms;
+
 
     // Start is called before the first frame update
     void Start()
@@ -154,35 +157,44 @@ public class Agent_Handler : MonoBehaviour
                 // fist player will always get a chance to move
                 // calculate reward based on chosen step and current state
                 mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action,1); // update mr pac man's score before moving
-                applyMrPacManAction(mr_pac_man_action);
+                action_return_mr = applyMrPacManAction(mr_pac_man_action);
                 Debug.Log("mr step reward: " + mr_step_reward);
 
 
                 // second player might have been eaten
-                if(mr_step_reward == 100f){
+                if(action_return_mr == 2){
+                    mr_step_reward = 100f;
                     ms_step_reward = -100f;
-                }else if(mr_step_reward == 100f){ // or get to eat
-                    ms_step_reward = 100f; 
+                }else if(action_return_mr == 3)
+                { // or get to eat
+                    mr_step_reward = -100f;
+                    ms_step_reward = 100f;
                 }
                 else{
                     // calculate the reward after the other agent has already completed their action, but before taking the action
                     ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
-                    applyMsPacManAction(ms_pac_man_action);
+                    action_return_ms = applyMsPacManAction(ms_pac_man_action);
                 }
 
             }else{ //otherwise ms pac man goes first
                 ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
-                applyMsPacManAction(ms_pac_man_action);
+                action_return_ms =  applyMsPacManAction(ms_pac_man_action);
                 Debug.Log("ms step reward: " + ms_step_reward);
-                if(ms_step_reward == 100f){
+                if (action_return_ms == 2)
+                {
                     mr_step_reward = -100f;
-                }else if(ms_step_reward == -100f){
+                    ms_step_reward = 100f;
+                }
+                else if (action_return_ms == 3)
+                { // or get to eat
                     mr_step_reward = 100f;
-                
-                }else{ // most of the time mr will just move
+                    ms_step_reward = -100f;
+                }
+                else
+                { // most of the time mr will just move
                     
                     mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action,1); // update mr pac man's score before moving
-                    applyMrPacManAction(mr_pac_man_action);
+                    action_return_mr =  applyMrPacManAction(mr_pac_man_action);
                 }
             }
 
@@ -248,39 +260,41 @@ public class Agent_Handler : MonoBehaviour
      * @Player: 1 for Mr Pac-Man and 2 for Ms Pac-Man
      * @Direction: 0 up. 1 down, 2 left, 3 right, 4 pass
      */
-    void applyMrPacManAction(int actionID){
+    int applyMrPacManAction(int actionID){
         Debug.Log("Taking action:" + actionID);
         
         if(actionID == 0){
-            gridController.Movement(1, 1);
+            return gridController.Movement(1, 1);
         }else if(actionID ==1){
-            gridController.Movement(1, 2);
+            return gridController.Movement(1, 2);
         }else if(actionID == 2){
-            gridController.Movement(1, 3);
+            return gridController.Movement(1, 3);
         }else if(actionID == 3){
-            gridController.Movement(1, 4);
+            return gridController.Movement(1, 4);
         }else if(actionID == 4){
-            gridController.Movement(2, 5);
+            return gridController.Movement(2, 5);
         }else{
             Debug.Log("entered invalid action");
+            return -1;
         }
 
     }
 
-    void applyMsPacManAction(int actionID){
+    int applyMsPacManAction(int actionID){
 
         if(actionID == 0){
-            gridController.Movement(2, 1);
+            return gridController.Movement(2, 1);
         }else if(actionID ==1){
-            gridController.Movement(2, 2);
+            return gridController.Movement(2, 2);
         }else if(actionID == 2){
-            gridController.Movement(2, 3);
+            return gridController.Movement(2, 3);
         }else if(actionID == 3){
-            gridController.Movement(2, 4);
+            return gridController.Movement(2, 4);
         }else if(actionID == 4){
-            gridController.Movement(2, 5);
+            return gridController.Movement(2, 5);
         }else{
             Debug.Log("entered invalid action");
+            return -1;
         }
 
     }
