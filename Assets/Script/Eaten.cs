@@ -18,7 +18,7 @@ public class Eaten : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("GameObject2 collided with " + col.name);
+        //Debug.Log("GameObject2 collided with " + col.name);
         DestroyObject(gameObject);
     }
 }

@@ -191,7 +191,7 @@ public class MsPacManAgent
         alglib.minlpresults(state_LP, out action_Ms_LP, out rep); //get the results
 
         // output to the console for debugging
-        Debug.Log("learned policy: " + alglib.ap.format(action_Ms_LP,3));
+        //Debug.Log("learned policy: " + alglib.ap.format(action_Ms_LP,3));
 
         // update the Ms pac man policy and cast back to float
         for(int i = 0; i<5;i++){
@@ -217,9 +217,9 @@ public class MsPacManAgent
 
         // let Q[s,a, .] = (1 - alpha) * Q[s,a,o] + alpha * (rew + gamma * V[s'])
         for(int o = 0; o < 5; o++){ // need to update for all possible opponent actions; q-learning does not differentiate
-            // Debug.Log("a: " + a + "  o: " + o);
+            // //Debug.Log("a: " + a + "  o: " + o);
             s.q_Ms[a,o] = (1 - this.alpha) * s.q_Ms[a,o] + (alpha * (s.reward + this.gamma * s_prime.Utility_Ms));
-            // Debug.Log("Setting q mr at a: " + a + " and o: " + o + " to the value of: " + s.q_Mr[a,o]);
+            // //Debug.Log("Setting q mr at a: " + a + " and o: " + o + " to the value of: " + s.q_Mr[a,o]);
         }
 
         // calculate values for each action

@@ -92,18 +92,18 @@ public class Agent_Handler : MonoBehaviour
         if (o_rdm_select)
         {
             opponent_agent_strategy_type = 0;
-            Debug.Log("opponent random");
+            //Debug.Log("opponent random");
         }
         else if (o_q_select)
         {
             opponent_agent_strategy_type = 1;
-            Debug.Log("opponent q");
+            //Debug.Log("opponent q");
 
         }
         else if (o_mm_select)
         {
             opponent_agent_strategy_type = 2;
-            Debug.Log("opponent minimax");
+            //Debug.Log("opponent minimax");
 
         }
 
@@ -111,19 +111,19 @@ public class Agent_Handler : MonoBehaviour
         if (rdm_select)
         {
             ms_pac_man_agent_startegy_type = 0;
-            Debug.Log("agent random");
+            //Debug.Log("agent random");
 
         }
         else if (q_select)
         {
             ms_pac_man_agent_startegy_type = 1;
-            Debug.Log("agent qlearning");
+            //Debug.Log("agent qlearning");
 
         }
         else if (mm_select)
         {
             ms_pac_man_agent_startegy_type = 2;
-            Debug.Log("agent minimax");
+            //Debug.Log("agent minimax");
 
         }
 
@@ -158,7 +158,7 @@ public class Agent_Handler : MonoBehaviour
                 // calculate reward based on chosen step and current state
                 mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action,1); // update mr pac man's score before moving
                 action_return_mr = applyMrPacManAction(mr_pac_man_action);
-                Debug.Log("mr step reward: " + mr_step_reward);
+                //Debug.Log("mr step reward: " + mr_step_reward);
 
 
                 // second player might have been eaten
@@ -179,7 +179,7 @@ public class Agent_Handler : MonoBehaviour
             }else{ //otherwise ms pac man goes first
                 ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
                 action_return_ms =  applyMsPacManAction(ms_pac_man_action);
-                Debug.Log("ms step reward: " + ms_step_reward);
+                //Debug.Log("ms step reward: " + ms_step_reward);
                 if (action_return_ms == 2)
                 {
                     mr_step_reward = -100f;
@@ -212,7 +212,7 @@ public class Agent_Handler : MonoBehaviour
             mr_new_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
             ms_new_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
 
-            Debug.Log("took actions");
+            //Debug.Log("took actions");
 
             // LEARN
 
@@ -245,7 +245,7 @@ public class Agent_Handler : MonoBehaviour
             // if game over the stop the agents from running
             if(training_curr_step >= max_training_steps){
                 // exit training
-                Debug.Log("QUIT TRAINING");
+                //Debug.Log("QUIT TRAINING");
                 agentsRunning = false;
                 gridController.ResetTable();
             }
@@ -261,7 +261,7 @@ public class Agent_Handler : MonoBehaviour
      * @Direction: 0 up. 1 down, 2 left, 3 right, 4 pass
      */
     int applyMrPacManAction(int actionID){
-        Debug.Log("Taking action:" + actionID);
+        //Debug.Log("Taking action:" + actionID);
         
         if(actionID == 0){
             return gridController.Movement(1, 1);
@@ -274,7 +274,7 @@ public class Agent_Handler : MonoBehaviour
         }else if(actionID == 4){
             return gridController.Movement(2, 5);
         }else{
-            Debug.Log("entered invalid action");
+            //Debug.Log("entered invalid action");
             return -1;
         }
 
@@ -293,7 +293,7 @@ public class Agent_Handler : MonoBehaviour
         }else if(actionID == 4){
             return gridController.Movement(2, 5);
         }else{
-            Debug.Log("entered invalid action");
+            //Debug.Log("entered invalid action");
             return -1;
         }
 
@@ -350,10 +350,10 @@ public class Agent_Handler : MonoBehaviour
         }
 
 
-        Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
+        //Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
         if (curr_cell.Pm == null)
         {
-            Debug.Log("#######GOTCHA######");
+            //Debug.Log("#######GOTCHA######");
             mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
             ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
             curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
@@ -390,8 +390,8 @@ public class Agent_Handler : MonoBehaviour
             new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
         }        
 
-        Debug.Log("is the current cell a big pm? :" + curr_cell.Pm.Big);
-        Debug.Log("is there a pm in new cell : " + (new_cell.Pm != null));
+        //Debug.Log("is the current cell a big pm? :" + curr_cell.Pm.Big);
+        //Debug.Log("is there a pm in new cell : " + (new_cell.Pm != null));
 
         // is there a small or big orb in the new cell
         if (new_cell.Candy == 1){ // small candy

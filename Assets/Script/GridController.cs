@@ -122,19 +122,19 @@ public class GridController : MonoBehaviour
         {
             if ((grid.GetCell(agentY, agentX).Pm.Big && grid.GetCell(opponenty, opponentx).Pm.Big) || (!grid.GetCell(agentY, agentX).Pm.Big && !grid.GetCell(opponenty, opponentx).Pm.Big)) // same size
             {
-                Debug.Log("Cant move there, opponent blocking ");
+                //Debug.Log("Cant move there, opponent blocking ");
                 return 1;
             }
             else if ((grid.GetCell(agentY, agentX).Pm.Big && !grid.GetCell(opponenty, opponentx).Pm.Big))
             {   
-                Debug.Log("AGENT WIN");
+                //Debug.Log("AGENT WIN");
                 this.AddWin(0); // ms pac man wins
                 
                 this.ResetTable();
                 return 2;
             }
             else
-                Debug.Log("OPPONENT WIN");
+                //Debug.Log("OPPONENT WIN");
                 this.AddWin(1); // mr pac man wins
                 this.ResetTable();
                 return 3;
@@ -168,7 +168,7 @@ public class GridController : MonoBehaviour
 
                         MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
                         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
-                        Debug.Log("Up: " + MrPy + " - " + MrP.transform.position);
+                        //Debug.Log("Up: " + MrPy + " - " + MrP.transform.position);
                         PrintTable();
                     }
 
@@ -189,7 +189,7 @@ public class GridController : MonoBehaviour
 
                         MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
                         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
-                        Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                        //Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                         PrintTable();
                     }
                 }
@@ -209,7 +209,7 @@ public class GridController : MonoBehaviour
 
                         MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
-                        Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                        //Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                         PrintTable();
                     }
                 }
@@ -229,7 +229,7 @@ public class GridController : MonoBehaviour
 
                         MrP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
                         MrP.gameObject.transform.position = new Vector3(MrPx, MrPy, 0);
-                        Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
+                        //Debug.Log("Down " + MrPy + " - " + MrP.transform.position);
                         PrintTable();
                     }
                 }
@@ -237,7 +237,7 @@ public class GridController : MonoBehaviour
             }
             else //WRONG DIRECTION NUMBER
             {
-                Debug.Log("This stay in place");
+                //Debug.Log("This stay in place");
             }
 
             // STEP CHECK
@@ -282,7 +282,7 @@ public class GridController : MonoBehaviour
 
                         MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
                         MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
-                        Debug.Log("Up: " + MsPy + " - " + MsP.transform.position);
+                        //Debug.Log("Up: " + MsPy + " - " + MsP.transform.position);
                         PrintTable();
                     }
                 }
@@ -302,7 +302,7 @@ public class GridController : MonoBehaviour
 
                         MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
                         MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
-                        Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                        //Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
                         PrintTable();
                     }
                 }
@@ -322,7 +322,7 @@ public class GridController : MonoBehaviour
 
                         MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                         MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
-                        Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                        //Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
                         PrintTable();
                     }
                 }
@@ -343,7 +343,7 @@ public class GridController : MonoBehaviour
 
                         MsP.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
                         MsP.gameObject.transform.position = new Vector3(MsPx, MsPy, 0);
-                        Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
+                        //Debug.Log("Down " + MsPy + " - " + MsP.transform.position);
                         PrintTable();
                     }
                 }
@@ -351,7 +351,7 @@ public class GridController : MonoBehaviour
             }
             else
             {
-                Debug.Log("This stay in place");
+                //Debug.Log("This stay in place");
             }
             // STEP CHECK
             if (grid.GetCell(MsPy, MsPx).Pm.StepsNumb > 0)                          // If you have steps left being big, decrease number of steps left
@@ -382,7 +382,7 @@ public class GridController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Inserted wrong player number\nenter 1 for mr and 2 for ms\n player number: " + player);
+            //Debug.Log("Inserted wrong player number\nenter 1 for mr and 2 for ms\n player number: " + player);
         }
 
         return checker;
@@ -415,7 +415,7 @@ public class GridController : MonoBehaviour
             }
             st = st + "\n|";
         }
-        Debug.Log(st);
+        //Debug.Log(st);
     }
 
     public void ClearLogs(){
@@ -837,9 +837,9 @@ public class GridController : MonoBehaviour
         MsActionList = xml_grid.MsActionList;
         MrQ = xml_grid.MrQ;
         MsQ = xml_grid.MsQ;
-        Debug.Log("Started Parsing");
+        //Debug.Log("Started Parsing");
         ParseXMLItems();
-        Debug.Log("Finished parsing");
+        //Debug.Log("Finished parsing");
         stream.Close();
     }
 

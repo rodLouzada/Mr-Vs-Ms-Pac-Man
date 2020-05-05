@@ -55,7 +55,7 @@ public class MrPacManAgent
 
         }
 
-        Debug.Log("Valid action not found");
+        //Debug.Log("Valid action not found");
         return -999; // should not ever make it here if values of Pi sum to 1.0
 
     }
@@ -82,9 +82,9 @@ public class MrPacManAgent
 
         // let Q[s,a, .] = (1 - alpha) * Q[s,a,o] + alpha * (rew + gamma * V[s'])
         for(int o = 0; o < 5; o++){ // need to update for all possible opponent actions; q-learning does not differentiate
-            // Debug.Log("a: " + a + "  o: " + o);
+            // //Debug.Log("a: " + a + "  o: " + o);
             s.q_Mr[a,o] = (1 - this.alpha) * s.q_Mr[a,o] + (alpha * (s.reward + this.gamma * s_prime.Utility_Mr));
-            // Debug.Log("Setting q mr at a: " + a + " and o: " + o + " to the value of: " + s.q_Mr[a,o]);
+            // //Debug.Log("Setting q mr at a: " + a + " and o: " + o + " to the value of: " + s.q_Mr[a,o]);
         }
 
         // calculate values for each action
@@ -93,10 +93,10 @@ public class MrPacManAgent
         for(int a_prime = 0; a_prime < 5; a_prime++){
 
             simplified_q_table[a_prime] = s.q_Mr[a_prime, 0]; // use 0 for opponent's action because it isn't accounted for
-            //Debug.Log("a': " + a_prime);
-            //Debug.Log("Setting summation table for a' to a value of:" + simplified_q_table[a_prime]);
-            //Debug.Log("q value of the action: " + s.q_Mr[a_prime,0]);
-            //Debug.Log("------------------------------------------------");
+            ////Debug.Log("a': " + a_prime);
+            ////Debug.Log("Setting summation table for a' to a value of:" + simplified_q_table[a_prime]);
+            ////Debug.Log("q value of the action: " + s.q_Mr[a_prime,0]);
+            ////Debug.Log("------------------------------------------------");
         }
 
         
@@ -242,7 +242,7 @@ public class MrPacManAgent
         alglib.minlpresults(state_LP, out action_Mr_LP, out rep); //get the results
 
         // output to the console for debugging
-        Debug.Log("learned policy: " + alglib.ap.format(action_Mr_LP,3));
+        //Debug.Log("learned policy: " + alglib.ap.format(action_Mr_LP,3));
 
         // update the Mr pac man policy and cast back to float
         for(int i = 0; i<5;i++){
