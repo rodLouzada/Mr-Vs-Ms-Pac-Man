@@ -47,6 +47,12 @@ public class GridController : MonoBehaviour
     public int games_won_mr = 0;
     public int games_won_ms = 0;
 
+    // log files of wins and points scored
+    public string ms_pac_man_wins_log = "";
+    public string mr_pac_man_wins_log = "";
+    public string ms_pac_man_points_log = "";
+    public string mr_pac_man_points_log = "";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -407,6 +413,13 @@ public class GridController : MonoBehaviour
             st = st + "\n|";
         }
         Debug.Log(st);
+    }
+
+    public void ClearLogs(){
+        this.ms_pac_man_wins_log = "";
+        this.mr_pac_man_wins_log = "";
+        this.ms_pac_man_points_log = "";
+        this.mr_pac_man_points_log = "";
     }
 
     /* This method reset candies and agents positions without erasing what have been learned already
@@ -844,13 +857,20 @@ public class GridController : MonoBehaviour
     }
 
     public void AddWin(int playerID){
-        if(playerID == 0){
+        if(playerID == 0){ // ms pac man wins
             this.games_won_ms += 1;
             txtMsGamesWon.text = this.games_won_ms.ToString();
+
         }else if(playerID == 1){
             this.games_won_mr += 1;
             txtMrGamesWon.text = this.games_won_mr.ToString();
         }
+
+        ms_pac_man_wins_log += ((this.games_won_ms).ToString() + ";");
+        mr_pac_man_wins_log += ((this.games_won_mr).ToString() + ";");
+
+        ms_pac_man_points_log += ((this.current_score_ms).ToString() + ";");
+        mr_pac_man_points_log += ((this.current_score_mr).ToString() + ";");
 
     }
 

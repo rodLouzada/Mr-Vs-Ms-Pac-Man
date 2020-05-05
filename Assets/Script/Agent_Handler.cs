@@ -40,7 +40,12 @@ public class Agent_Handler : MonoBehaviour
         if (start)
         {
 
+
             gridController.grid.Decay = Mathf.Pow(10, Mathf.Log10(0.01f / max_training_steps));
+
+            gridController.ClearLogs();
+
+
             // check for strategy toggle button
 
             rdm_select = rdm_tgl.isOn;
