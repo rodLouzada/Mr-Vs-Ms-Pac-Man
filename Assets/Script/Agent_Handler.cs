@@ -318,16 +318,14 @@ public class Agent_Handler : MonoBehaviour
         // curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
         
         if(curr_cell.Pm == null){
-            ms_curr_state = gridController.GetCell(gridController.MsPy, gridController.MsPx);
-            mr_curr_state = gridController.GetCell(gridController.MrPy, gridController.MrPx);
+            Cell ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
+            Cell mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
         
             if(playerID == 0){
                 curr_cell = ms_curr_state;
             }else if(playerID == 1){
                 curr_cell = mr_curr_state;
             }
-        
-        
         
         }
 
