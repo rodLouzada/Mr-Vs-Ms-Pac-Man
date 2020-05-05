@@ -168,6 +168,9 @@ public class Agent_Handler : MonoBehaviour
             //gridController.ms_reward += ms_step_reward;
             training_curr_step += 1;
 
+            gridController.txtStep_MS.text = training_curr_step.ToString();
+            gridController.txtStep_MR.text = training_curr_step.ToString();
+
             // get the new state of both players
             mr_new_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
             ms_new_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);

@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8ef7a2807f481142b6bde3c1255f1c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ag: {fileID: 65048464}
   table: 2
   MrP: {fileID: 2098443257}
   MsP: {fileID: 1854003845}
@@ -562,6 +563,8 @@ MonoBehaviour:
   o_rdm_select: 0
   o_q_select: 0
   o_mm_select: 0
+  curr_step: 0
+  training_curr_step: 0
 --- !u!114 &65048465
 MonoBehaviour:
   m_ObjectHideFlags: 0
