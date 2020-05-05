@@ -147,18 +147,34 @@ public class Agent_Handler : MonoBehaviour
             
             // in a random order, apply each agents action
             if(UnityEngine.Random.Range(0,2) == 0){
-                // calculate reward based on chosen step and current state
-                mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
-                applyMrPacManAction(mr_pac_man_action);
                 
-                // calculate the reward after the other agent has already completed their action, but before taking the action
-                ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
+                // fist player will always get a chance to move
+                // calculate reward based on chosen step and current state
+                mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action); // update mr pac man's score before moving
+                applyMrPacManAction(mr_pac_man_action);
+
+                // second player might have been eaten
+                if(mr_step_reward == 100f){
+                    ms_step_reward = -100f;
+                }else if(mr_step_reward == 100f){ // or get to eat
+                    ms_step_reward = 100f; 
+                }else{
+                    // calculate the reward after the other agent has already completed their action, but before taking the action
+                    ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action);
+                }
                 applyMsPacManAction(ms_pac_man_action);
             }else{ //otherwise ms pac man goes first
-                ms_step_reward = calculateStepReward(ms_curr_state.Row, ms_curr_state.Col, ms_pac_man_action);
+                ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action);
                 applyMsPacManAction(ms_pac_man_action);
-                mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
-                applyMrPacManAction(mr_pac_man_action);
+
+                if(ms_step_reward == 100f){
+                    mr_step_reward = -100f;
+                }else if(ms_step_reward == -100f){
+                    mr_step_reward = 100f;
+                }else{ // most of the time mr will just move
+                    mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action); // update mr pac man's score before moving
+                    applyMrPacManAction(mr_pac_man_action);
+                }
             }
 
             // update global score
@@ -287,11 +303,16 @@ public class Agent_Handler : MonoBehaviour
     
     
     // 
-    float calculateStepReward(int curr_coord_y, int curr_coord_x, int action_index){
-        Cell curr_cell;
+    float calculateStepReward(Cell curr_cell, int action_index){
+        // Cell curr_cell;
         Cell new_cell;
+        int curr_coord_x = curr_cell.Row;
+        int curr_coord_y = curr_cell.Col;
 
-        curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+        int new_coord_x;
+        int new_coory_y;
+
+        // curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
         
         Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
 
@@ -323,9 +344,7 @@ public class Agent_Handler : MonoBehaviour
             }
         }else{
             new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
-        }
-
-
+        }        
 
         // is there a small or big orb in the new cell
         if(new_cell.Candy == 1){ // small candy
