@@ -23,6 +23,15 @@ public class Agent_Handler : MonoBehaviour
 
     public int curr_step = 0;
     public int training_curr_step = 0;
+
+    // sotre the current state and whatever state is moved into for learning
+    Cell mr_curr_state;
+    Cell mr_new_state;
+
+    Cell ms_curr_state;
+    Cell ms_new_state;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -119,12 +128,7 @@ public class Agent_Handler : MonoBehaviour
         mrPacMan = new MrPacManAgent(gridController.grid.Explor, gridController.grid.Decay, gridController.grid.Learning_rate, gridController.grid.Discount_factor, opponent_agent_strategy_type, isTraining);
         msPacMan = new MsPacManAgent(gridController.grid.Explor, gridController.grid.Decay, gridController.grid.Learning_rate, gridController.grid.Discount_factor, ms_pac_man_agent_startegy_type, isTraining);
 
-        // sotre the current state and whatever state is moved into for learning
-        Cell mr_curr_state;
-        Cell mr_new_state;
-
-        Cell ms_curr_state;
-        Cell ms_new_state;
+        
 
 
 
@@ -153,6 +157,7 @@ public class Agent_Handler : MonoBehaviour
                 applyMrPacManAction(mr_pac_man_action);
                 Debug.Log("mr step reward: " + mr_step_reward);
 
+
                 // second player might have been eaten
                 if(mr_step_reward == 100f){
                     ms_step_reward = -100f;
@@ -164,6 +169,7 @@ public class Agent_Handler : MonoBehaviour
                     ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
                     applyMsPacManAction(ms_pac_man_action);
                 }
+
             }else{ //otherwise ms pac man goes first
                 ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
                 applyMsPacManAction(ms_pac_man_action);
@@ -331,9 +337,17 @@ public class Agent_Handler : MonoBehaviour
 
 
         Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
+        if (curr_cell.Pm == null)
+        {
+            Debug.Log("#######GOTCHA######");
+            mr_curr_state = gridController.grid.GetCell(gridController.MrPy, gridController.MrPx);
+            ms_curr_state = gridController.grid.GetCell(gridController.MsPy, gridController.MsPx);
+            curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
+            return -100f;
+        }
 
         // get direction based on action
-        if(action_index == 0){
+        if (action_index == 0){
             if(curr_coord_y == gridController.grid.row-1){
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
             }else{
@@ -366,12 +380,12 @@ public class Agent_Handler : MonoBehaviour
         Debug.Log("is there a pm in new cell : " + (new_cell.Pm != null));
 
         // is there a small or big orb in the new cell
-        if(new_cell.Candy == 1){ // small candy
+        if (new_cell.Candy == 1){ // small candy
             return 1.0f;
         }else if(new_cell.Candy == 2){ // big candy
             return 5.0f;
-        }else if(new_cell.Pm != null){ // is there a player in the new cell?
-            
+
+        }else if(new_cell.Pm != null && !new_cell.Closed){ // is there a player in the new cell?
             // is the player in the current cell big or small?
             if(new_cell.Pm.Big && curr_cell.Pm.Big == false){ // is the new cell player big and I'm small
                 return -100f;
@@ -388,6 +402,7 @@ public class Agent_Handler : MonoBehaviour
         return -0.05f;
 
     }
+
 
 
 }

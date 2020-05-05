@@ -148,7 +148,7 @@ public class GridController : MonoBehaviour
      * @Player: 1 for Mr Pac-Man and 2 for Ms Pac-Man
      * @Direction: 1 up. 2 down, 3 left, 4 right
      */
-    public void Movement(int player, int direction)
+    public int Movement(int player, int direction)
     {
 
         int checker = -1;
@@ -385,6 +385,7 @@ public class GridController : MonoBehaviour
             Debug.Log("Inserted wrong player number\nenter 1 for mr and 2 for ms\n player number: " + player);
         }
 
+        return checker;
 
     }
 
