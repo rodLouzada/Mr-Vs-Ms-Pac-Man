@@ -144,35 +144,38 @@ public class Agent_Handler : MonoBehaviour
             mr_pac_man_action = mrPacMan.getAction(gridController.grid.GetCell(gridController.MrPy, gridController.MrPx));
             ms_pac_man_action = msPacMan.getAction(gridController.grid.GetCell(gridController.MsPy, gridController.MsPx));
 
-            
             // in a random order, apply each agents action
             if(UnityEngine.Random.Range(0,2) == 0){
                 
                 // fist player will always get a chance to move
                 // calculate reward based on chosen step and current state
-                mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action); // update mr pac man's score before moving
+                mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action,1); // update mr pac man's score before moving
                 applyMrPacManAction(mr_pac_man_action);
+                Debug.Log("mr step reward: " + mr_step_reward);
 
                 // second player might have been eaten
                 if(mr_step_reward == 100f){
                     ms_step_reward = -100f;
                 }else if(mr_step_reward == 100f){ // or get to eat
                     ms_step_reward = 100f; 
-                }else{
-                    // calculate the reward after the other agent has already completed their action, but before taking the action
-                    ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action);
                 }
-                applyMsPacManAction(ms_pac_man_action);
+                else{
+                    // calculate the reward after the other agent has already completed their action, but before taking the action
+                    ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
+                    applyMsPacManAction(ms_pac_man_action);
+                }
             }else{ //otherwise ms pac man goes first
-                ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action);
+                ms_step_reward = calculateStepReward(ms_curr_state, ms_pac_man_action,0);
                 applyMsPacManAction(ms_pac_man_action);
-
+                Debug.Log("ms step reward: " + ms_step_reward);
                 if(ms_step_reward == 100f){
                     mr_step_reward = -100f;
                 }else if(ms_step_reward == -100f){
                     mr_step_reward = 100f;
+                
                 }else{ // most of the time mr will just move
-                    mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action); // update mr pac man's score before moving
+                    
+                    mr_step_reward = calculateStepReward(mr_curr_state, mr_pac_man_action,1); // update mr pac man's score before moving
                     applyMrPacManAction(mr_pac_man_action);
                 }
             }
@@ -303,7 +306,7 @@ public class Agent_Handler : MonoBehaviour
     
     
     // 
-    float calculateStepReward(Cell curr_cell, int action_index){
+    float calculateStepReward(Cell curr_cell, int action_index, int playerID){
         // Cell curr_cell;
         Cell new_cell;
         int curr_coord_x = curr_cell.Row;
@@ -314,6 +317,21 @@ public class Agent_Handler : MonoBehaviour
 
         // curr_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
         
+        if(curr_cell.Pm == null){
+            ms_curr_state = gridController.GetCell(gridController.MsPy, gridController.MsPx);
+            mr_curr_state = gridController.GetCell(gridController.MrPy, gridController.MrPx);
+        
+            if(playerID == 0){
+                curr_cell = ms_curr_state;
+            }else if(playerID == 1){
+                curr_cell = mr_curr_state;
+            }
+        
+        
+        
+        }
+
+
         Debug.Log("current coordinate x: " + curr_coord_x + " coord y : " + curr_coord_y + "  action: " + action_index);
 
         // get direction based on action
@@ -346,12 +364,16 @@ public class Agent_Handler : MonoBehaviour
             new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
         }        
 
+        Debug.Log("is the current cell a big pm? :" + curr_cell.Pm.Big);
+        Debug.Log("is there a pm in new cell : " + (new_cell.Pm != null));
+
         // is there a small or big orb in the new cell
         if(new_cell.Candy == 1){ // small candy
             return 1.0f;
         }else if(new_cell.Candy == 2){ // big candy
             return 5.0f;
         }else if(new_cell.Pm != null){ // is there a player in the new cell?
+            
             // is the player in the current cell big or small?
             if(new_cell.Pm.Big && curr_cell.Pm.Big == false){ // is the new cell player big and I'm small
                 return -100f;
@@ -359,6 +381,11 @@ public class Agent_Handler : MonoBehaviour
                 return 100f; //eat 'em
             }
         }
+
+
+
+
+
 
         return -0.05f;
 
