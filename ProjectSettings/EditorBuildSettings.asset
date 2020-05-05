@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Small.unity
     guid: f3b81c32b592f504cbf62635df0e66bb
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Large.unity
-    guid: 26ce653c3d703ed4d9f6e123d74fad95
+    guid: ac88411577ff3ed45b8a6b17a3fb3f7b
   - enabled: 1
     path: Assets/Scenes/Maze.unity
     guid: 37c7a02926181b347876f676f6e2f46f

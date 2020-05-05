@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+
 public class Agent_Handler : MonoBehaviour
 {
     GridController gridController; 
@@ -37,7 +39,10 @@ public class Agent_Handler : MonoBehaviour
         
         if (start)
         {
+
+            gridController.grid.Decay = Mathf.Pow(10, Mathf.Log10(0.01f / max_training_steps));
             // check for strategy toggle button
+
             rdm_select = rdm_tgl.isOn;
             q_select = q_tgl.isOn;
             mm_select = mm_tgl.isOn;
@@ -101,8 +106,8 @@ public class Agent_Handler : MonoBehaviour
         }
 
         // yield return new WaitForSeconds(2); // wait for 1 second
-        mrPacMan = new MrPacManAgent(.2f, 0.9999954f,.01f, 0.9f, opponent_agent_strategy_type, isTraining);
-        msPacMan = new MsPacManAgent(.2f, 0.9999954f,.01f, 0.9f, ms_pac_man_agent_startegy_type, isTraining);
+        mrPacMan = new MrPacManAgent(gridController.grid.Explor, gridController.grid.Decay, gridController.grid.Learning_rate, gridController.grid.Discount_factor, opponent_agent_strategy_type, isTraining);
+        msPacMan = new MsPacManAgent(gridController.grid.Explor, gridController.grid.Decay, gridController.grid.Learning_rate, gridController.grid.Discount_factor, ms_pac_man_agent_startegy_type, isTraining);
 
         // sotre the current state and whatever state is moved into for learning
         Cell mr_curr_state;
@@ -131,7 +136,7 @@ public class Agent_Handler : MonoBehaviour
 
             
             // in a random order, apply each agents action
-            if(Random.Range(0,2) == 0){
+            if(UnityEngine.Random.Range(0,2) == 0){
                 // calculate reward based on chosen step and current state
                 mr_step_reward = calculateStepReward(mr_curr_state.Row, mr_curr_state.Col, mr_pac_man_action); // update mr pac man's score before moving
                 applyMrPacManAction(mr_pac_man_action);
