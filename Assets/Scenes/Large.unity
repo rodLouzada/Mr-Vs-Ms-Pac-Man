@@ -497,7 +497,7 @@ MonoBehaviour:
   txtMsScore: {fileID: 822611250}
   txtMrGamesWon: {fileID: 81624880}
   txtMsGamesWon: {fileID: 1375073440}
-  txtStep_MS: {fileID: 1457931406}
+  txtStep_MS: {fileID: 1802971754}
   txtStep_MR: {fileID: 1094041710}
   current_score_mr: 0
   current_score_ms: 0
@@ -505,8 +505,6 @@ MonoBehaviour:
   curr_match_score_ms: 0
   games_won_mr: 0
   games_won_ms: 0
-  steps_played_MS: 0
-  steps_played_MR: 0
   ms_pac_man_wins_log: 
   mr_pac_man_wins_log: 
   ms_pac_man_points_log: 
@@ -562,6 +560,8 @@ MonoBehaviour:
   o_rdm_select: 0
   o_q_select: 0
   o_mm_select: 0
+  curr_step: 0
+  training_curr_step: 0
 --- !u!114 &65048465
 MonoBehaviour:
   m_ObjectHideFlags: 0

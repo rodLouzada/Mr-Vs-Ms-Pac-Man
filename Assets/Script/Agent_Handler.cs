@@ -329,9 +329,11 @@ public class Agent_Handler : MonoBehaviour
     float calculateStepReward(Cell curr_cell, int action_index, int playerID){
         // Cell curr_cell;
         Cell new_cell;
-        int curr_coord_x = curr_cell.Row;
-        int curr_coord_y = curr_cell.Col;
+        int curr_coord_x = curr_cell.Col;
+        int curr_coord_y = curr_cell.Row;
 
+
+        Debug.Log("curr_coord_x: "+ curr_coord_x + " curr_coord_y:" + curr_coord_y);
         int new_coord_x;
         int new_coory_y;
 
@@ -381,7 +383,7 @@ public class Agent_Handler : MonoBehaviour
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x-1);
             }
         }else if(action_index == 3){
-            if(curr_coord_x == gridController.grid.col -1){
+            if(curr_coord_x >= gridController.grid.col -1){
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x);
             }else{
                 new_cell = gridController.grid.GetCell(curr_coord_y, curr_coord_x+1);
