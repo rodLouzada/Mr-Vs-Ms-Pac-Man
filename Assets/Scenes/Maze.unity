@@ -1863,7 +1863,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentsRunning: 1
   training_if_txt: {fileID: 464150398}
-  test_if_txt: {fileID: 1463892640}
+  test_if_txt: {fileID: 890063047}
   max_steps: 2500
   rdm_tgl: {fileID: 1405518772}
   q_tgl: {fileID: 435374546}
