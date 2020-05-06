@@ -843,6 +843,24 @@ public class GridController : MonoBehaviour
         stream.Close();
     }
 
+    public void DumpLogs(){
+        var stream = File.CreateText("C:/xml/log_dump_" + System.DateTime.Now.ToString("dd_hh_mm_ss") + ".txt");
+
+        stream.WriteLine("<ms_pac_man_wins>");
+        stream.WriteLine(ms_pac_man_wins_log);
+        stream.WriteLine(""); //write an empty line for organization purposes
+        stream.WriteLine("<mr_pac_man_wins>");
+        stream.WriteLine(mr_pac_man_wins_log);
+        stream.WriteLine("");
+        stream.WriteLine("<ms_pac_man_points>");
+        stream.WriteLine(ms_pac_man_points_log);
+        stream.WriteLine("");
+        stream.WriteLine("<mr_pac_man_points>");
+        stream.WriteLine(mr_pac_man_points_log);
+
+        stream.Close();
+    }
+
 
     [System.Serializable]
     public class ListsGrid
