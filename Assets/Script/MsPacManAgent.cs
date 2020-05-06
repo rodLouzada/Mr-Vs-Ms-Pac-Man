@@ -40,7 +40,7 @@ public class MsPacManAgent
 
     public int getAction(Cell state){
         //with probability explor, return an action uniformly at random
-        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining) || explor == 1.0f){
+        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor) || explor == 1.0f){
             return UnityEngine.Random.Range(0, 5);
         }
 

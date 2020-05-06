@@ -35,7 +35,7 @@ public class MrPacManAgent
     public int getAction(Cell state){
     
         //with probability explor, return an action uniformly at random
-        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor && isTraining) || state.ActionMr.Sum() < 1.0 || explor == 1.0f){
+        if((UnityEngine.Random.Range(0.0f,1.0f) <= explor) || state.ActionMr.Sum() < 1.0 || explor == 1.0f){
             return UnityEngine.Random.Range(0, 5);
         }
 

@@ -313,6 +313,7 @@ public class Agent_Handler : MonoBehaviour
     }
     
     public void setToTestMode(){
+        gridController.ResetTable();
         isTraining = false;
         max_training_steps = int.Parse(test_if_txt.text);
         max_steps = int.MaxValue;
